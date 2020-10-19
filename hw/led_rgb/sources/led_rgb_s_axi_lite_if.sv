@@ -62,6 +62,8 @@ module led_rgb_s_axi_lite_if (
     logic [31:0]reg_5 = '{default:0};
     logic [31:0]reg_6 = '{default:0};
 
+    logic aw_en = 1'b1;
+
 
     always_comb begin : user_logic_assignment_group
         user_resetn <= reg_0[0];
@@ -90,12 +92,27 @@ module led_rgb_s_axi_lite_if (
     end 
 
 
+    /**/
+    always_ff @(posedge aclk) begin : aw_en_processing 
+        if (!aresetn) 
+            aw_en <= 1'b1;
+        else
+            if (!awready & awvalid & wvalid & aw_en)
+                aw_en <= 1'b0;
+            else
+                if (bready & bvalid)
+                    aw_en <= 1'b1;
+    end 
 
+    /**/
     always_ff @(posedge aclk) begin : awready_processing 
         if (!aresetn)
             awready <= 1'b0;
         else
-            awready <= 1'b1;
+            if (!awready & awvalid & wvalid & aw_en)
+                awready <= 1'b1;
+            else 
+                awready <= 1'b0;
     end 
 
 
@@ -104,7 +121,11 @@ module led_rgb_s_axi_lite_if (
         if (!aresetn)
             wready <= 1'b0;
         else
-            wready <= 1'b1;
+            if (!wready & wvalid & awvalid & aw_en)
+                wready <= 1'b1;
+            else
+                wready <= 1'b0;
+
     end 
 
 
@@ -114,7 +135,7 @@ module led_rgb_s_axi_lite_if (
             bvalid <= 1'b0;
         else
             // if (awvalid & awready & wvalid & wready & ~bvalid)
-            if (wvalid & wready & ~bvalid)
+            if (wvalid & wready & awvalid & awready & ~bvalid)
                 bvalid <= 1'b1;
             else
                 if (bvalid & bready)
@@ -128,7 +149,11 @@ module led_rgb_s_axi_lite_if (
         if (!aresetn)
             arready <= 1'b0;
         else
-            arready <= 1'b1;
+            if (!arready & arvalid)
+                arready <= 1'b1;
+            else
+                arready <= 1'b0;
+            
     end
 
 
@@ -196,7 +221,7 @@ module led_rgb_s_axi_lite_if (
     end
 
 
-
+    /*done*/
     always_ff @(posedge aclk) begin : reg_0_processing 
         if (!aresetn)
             reg_0 <= 'b0;
@@ -210,7 +235,7 @@ module led_rgb_s_axi_lite_if (
         end 
 
 
-
+    /*done*/
     always_ff @(posedge aclk) begin : reg_1_processing 
         if (!aresetn)
             reg_1 <= 'b0;
@@ -221,7 +246,7 @@ module led_rgb_s_axi_lite_if (
         end 
 
 
-
+    /*done*/
     always_ff @(posedge aclk) begin : reg_2_processing 
         if (!aresetn)
             reg_2 <= 'b0;
@@ -232,7 +257,7 @@ module led_rgb_s_axi_lite_if (
         end 
 
 
-
+    /*done*/
     always_ff @(posedge aclk) begin : reg_3_processing 
         if (!aresetn)
             reg_3 <= 'b0;
@@ -243,7 +268,7 @@ module led_rgb_s_axi_lite_if (
         end 
 
 
-
+    /*done*/
     always_ff @(posedge aclk) begin : reg_4_processing 
         if (!aresetn)
             reg_4 <= 'b0;
@@ -254,7 +279,7 @@ module led_rgb_s_axi_lite_if (
         end 
 
 
-
+    /*done*/
     always_ff @(posedge aclk) begin : reg_5_processing 
         if (!aresetn)
             reg_5 <= 'b0;
@@ -265,7 +290,7 @@ module led_rgb_s_axi_lite_if (
         end 
 
 
-
+    /*done*/
     always_ff @(posedge aclk) begin : reg_6_processing 
         if (!aresetn)
             reg_6 <= 'b0;
