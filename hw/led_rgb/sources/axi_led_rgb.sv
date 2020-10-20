@@ -52,9 +52,9 @@ module axi_led_rgb #(
     logic [31:0] duration_g     ;
     logic [31:0] duration_b     ;
 
-    logic LED_R_STS             ;
-    logic LED_G_STS             ;
-    logic LED_B_STS             ;
+    logic led_r_sts             ;
+    logic led_g_sts             ;
+    logic led_b_sts             ;
 
     led_rgb_s_axi_lite_if  led_rgb_s_axi_lite_if_inst (
         .aclk         (aclk)    ,
@@ -102,9 +102,9 @@ module axi_led_rgb #(
         .duration_g   (duration_g),
         .duration_b   (duration_b),
 
-        .LED_R_STS    (LED_R_STS),
-        .LED_G_STS    (LED_G_STS),
-        .LED_B_STS    (LED_B_STS) 
+        .led_r_sts    (led_r_sts),
+        .led_g_sts    (led_g_sts),
+        .led_b_sts    (led_b_sts) 
 
     );
 
@@ -134,9 +134,9 @@ module axi_led_rgb #(
         .duration_g (duration_g),
         .duration_b (duration_b),
 
-        .LED_R_STS  (LED_R_STS),
-        .LED_G_STS  (LED_G_STS),
-        .LED_B_STS  (LED_B_STS),
+        .led_r_sts  (led_r_sts),
+        .led_g_sts  (led_g_sts),
+        .led_b_sts  (led_b_sts),
 
         .LED_R      (LED_R)             , // to output on board
         .LED_G      (LED_G)             ,

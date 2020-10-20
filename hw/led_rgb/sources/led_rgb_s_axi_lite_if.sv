@@ -48,9 +48,9 @@ module led_rgb_s_axi_lite_if (
     output logic            [31:0] duration_g          ,
     output logic            [31:0] duration_b          ,
 
-    input                   LED_R_STS          , 
-    input                   LED_G_STS          ,
-    input                   LED_B_STS           
+    input                   led_r_sts          , 
+    input                   led_g_sts          ,
+    input                   led_b_sts           
 
 );
 
@@ -88,10 +88,10 @@ module led_rgb_s_axi_lite_if (
 
 
 
-    always_comb begin : from_user_logic_assignment 
-        reg_0[1] <= LED_R_STS;
-        reg_0[2] <= LED_G_STS;
-        reg_0[3] <= LED_B_STS;
+    always_ff @(posedge aclk) begin : from_user_logic_assignment 
+        reg_0[1] <= led_r_sts;
+        reg_0[2] <= led_g_sts;
+        reg_0[3] <= led_b_sts;
     end 
 
 
@@ -226,8 +226,11 @@ module led_rgb_s_axi_lite_if (
 
     /*done*/
     always_ff @(posedge aclk) begin : reg_0_processing 
-        if (!aresetn)
-            reg_0 <= 'b0;
+        if (!aresetn) 
+        begin
+            reg_0[31:4] <= 'b0;
+            reg_0[0] <= 'b0;
+        end 
         else
             if (awvalid & awready & wvalid & wready)
                 if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h00)

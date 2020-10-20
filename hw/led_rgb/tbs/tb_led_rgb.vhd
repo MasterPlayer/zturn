@@ -27,7 +27,7 @@ architecture tb_led_rgb_arch of tb_led_rgb is
             aclk            :   in      std_logic                           ;
             aresetn         :   in      std_logic                           ;
 
-            awaddr          :   in      std_logic_vector (  2 downto 0 )    ;
+            awaddr          :   in      std_logic_vector (  4 downto 0 )    ;
             awprot          :   in      std_logic_vector (  2 downto 0 )    ;
             awvalid         :   in      std_logic                           ;
             awready         :   out     std_logic                           ;
@@ -41,7 +41,7 @@ architecture tb_led_rgb_arch of tb_led_rgb is
             bvalid          :   out     std_logic                           ;
             bready          :   in      std_logic                           ;
 
-            araddr          :   in      std_logic_vector (  2 downto 0 )    ;
+            araddr          :   in      std_logic_vector (  4 downto 0 )    ;
             arprot          :   in      std_logic_vector (  2 downto 0 )    ;
             arvalid         :   in      std_logic                           ;
             arready         :   out     std_logic                           ;
@@ -57,7 +57,7 @@ architecture tb_led_rgb_arch of tb_led_rgb is
     end component;
 
 
-    signal  awaddr          :           std_logic_vector (  2 downto 0 ) := (others => '0')     ;
+    signal  awaddr          :           std_logic_vector (  4 downto 0 ) := (others => '0')     ;
     signal  awprot          :           std_logic_vector (  2 downto 0 ) := (others => '0')     ;
     signal  awvalid         :           std_logic                        := '0'                 ;
     signal  awready         :           std_logic                           ;
@@ -71,7 +71,7 @@ architecture tb_led_rgb_arch of tb_led_rgb is
     signal  bvalid          :           std_logic                           ;
     signal  bready          :           std_logic                        := '0'                 ;
 
-    signal  araddr          :           std_logic_vector (  2 downto 0 ) := (others => '0')     ;
+    signal  araddr          :           std_logic_vector (  4 downto 0 ) := (others => '0')     ;
     signal  arprot          :           std_logic_vector (  2 downto 0 ) := (others => '0')     ;
     signal  arvalid         :           std_logic                        := '0'                 ;
     signal  arready         :           std_logic                           ;
@@ -142,23 +142,16 @@ begin
         if CLK'event AND CLK = '1' then 
             case i is 
                 when 1000 => 
-                    awaddr  <= "000";
+                    awaddr  <= "00000";
                     awvalid <= '1';
                     wdata   <= x"00000001";
                     wvalid  <= '1';
                     bready  <= '1';
 
                 when 1008 => 
-                    awaddr  <= "001";
+                    awaddr  <= "00100";
                     awvalid <= '1';
-                    wdata   <= x"00000003";
-                    wvalid  <= '1';
-                    bready  <= '1';
-
-                when 1004 => 
-                    awaddr  <= "010";
-                    awvalid <= '1';
-                    wdata   <= x"00000010";
+                    wdata   <= x"00000002";
                     wvalid  <= '1';
                     bready  <= '1';
 
@@ -215,9 +208,9 @@ begin
 
                 when 1001 | 1005 | 1009 | 1013 | 1017 | 1021 | 1025 | 1029 | 1033 | 1037 => 
                     awaddr  <= awaddr;
-                    awvalid <= '0';
+                    awvalid <= awvalid;
                     wdata   <= wdata;
-                    wvalid  <= '0';
+                    wvalid  <= wvalid;
                     bready  <= '1';
 
                 when others => 
@@ -235,7 +228,7 @@ begin
     begin
         if CLK'event AND CLK = '1' then 
             case i is 
-                when 2000 => 
+                when 2000 | 2001=> 
                     araddr <= araddr; arvalid <= '1'; rready <= '1';
 
                 when others => 

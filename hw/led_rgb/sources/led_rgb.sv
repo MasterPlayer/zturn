@@ -25,9 +25,9 @@ module led_rgb #(
         input[31:0] duration_g          ,
         input[31:0] duration_b          ,
 
-        output logic LED_R_STS          , 
-        output logic LED_G_STS          ,
-        output logic LED_B_STS          ,
+        output logic led_r_sts          , 
+        output logic led_g_sts          ,
+        output logic led_b_sts          ,
 
         output logic LED_R              , // to output on board
         output logic LED_G              ,
@@ -272,23 +272,23 @@ module led_rgb #(
 
     always_comb begin : led_r_sts_processing 
         if (current_state_led_r == IDLE_ST)
-            LED_R_STS <= 1'b0;
+            led_r_sts <= 1'b0;
         else
-            LED_R_STS <= 1'b1;
+            led_r_sts <= 1'b1;
     end 
 
     always_comb begin : led_g_sts_processing 
         if (current_state_led_g == IDLE_ST)
-            LED_G_STS <= 1'b0;
+            led_g_sts <= 1'b0;
         else
-            LED_G_STS <= 1'b1;
+            led_g_sts <= 1'b1;
     end 
 
     always_comb begin : led_b_sts_processing 
         if (current_state_led_b == IDLE_ST)
-            LED_B_STS <= 1'b0;
+            led_b_sts <= 1'b0;
         else
-            LED_B_STS <= 1'b1;
+            led_b_sts <= 1'b1;
     end 
 
 
