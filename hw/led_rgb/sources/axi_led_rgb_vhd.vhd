@@ -12,7 +12,7 @@ entity axi_led_rgb_vhd is
         aclk            :   in      std_logic                           ;
         aresetn         :   in      std_logic                           ;
 
-        awaddr          :   in      std_logic_vector (  2 downto 0 )    ;
+        awaddr          :   in      std_logic_vector (  4 downto 0 )    ;
         awprot          :   in      std_logic_vector (  2 downto 0 )    ;
         awvalid         :   in      std_logic                           ;
         awready         :   out     std_logic                           ;
@@ -26,7 +26,7 @@ entity axi_led_rgb_vhd is
         bvalid          :   out     std_logic                           ;
         bready          :   in      std_logic                           ;
 
-        araddr          :   in      std_logic_vector (  2 downto 0 )    ;
+        araddr          :   in      std_logic_vector (  4 downto 0 )    ;
         arprot          :   in      std_logic_vector (  2 downto 0 )    ;
         arvalid         :   in      std_logic                           ;
         arready         :   out     std_logic                           ;
@@ -53,7 +53,7 @@ architecture axi_led_rgb_vhd_arch of axi_led_rgb_vhd is
             aclk            :   in      std_logic                           ;
             aresetn         :   in      std_logic                           ;
 
-            awaddr          :   in      std_logic_vector (  2 downto 0 )    ;
+            awaddr          :   in      std_logic_vector (  4 downto 0 )    ;
             awprot          :   in      std_logic_vector (  2 downto 0 )    ;
             awvalid         :   in      std_logic                           ;
             awready         :   out     std_logic                           ;
@@ -67,7 +67,7 @@ architecture axi_led_rgb_vhd_arch of axi_led_rgb_vhd is
             bvalid          :   out     std_logic                           ;
             bready          :   in      std_logic                           ;
 
-            araddr          :   in      std_logic_vector (  2 downto 0 )    ;
+            araddr          :   in      std_logic_vector (  4 downto 0 )    ;
             arprot          :   in      std_logic_vector (  2 downto 0 )    ;
             arvalid         :   in      std_logic                           ;
             arready         :   out     std_logic                           ;

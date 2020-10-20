@@ -4,7 +4,7 @@ module led_rgb_s_axi_lite_if (
     input                    aclk          ,
     input                    aresetn       ,
 
-    input   [  2 : 0 ]       awaddr        ,
+    input   [  4 : 0 ]       awaddr        ,
     input   [  2 : 0 ]       awprot        , // not used
     input                    awvalid       ,
     output logic             awready       ,
@@ -18,7 +18,7 @@ module led_rgb_s_axi_lite_if (
     output logic             bvalid        ,
     input                    bready        ,
 
-    input   [  2 : 0 ]       araddr        ,
+    input   [  4 : 0 ]       araddr        ,
     input   [  2 : 0 ]       arprot        ,
     input                    arvalid       ,
     output logic             arready       ,
@@ -53,6 +53,9 @@ module led_rgb_s_axi_lite_if (
     input                   LED_B_STS           
 
 );
+
+    localparam integer ADDR_LSB = 2;
+    localparam integer ADDR_OPT = 2;
 
     logic [31:0]reg_0 = '{default:0};
     logic [31:0]reg_1 = '{default:0};
@@ -176,7 +179,7 @@ module led_rgb_s_axi_lite_if (
             rdata <= '{default:0};
         else
             if (arvalid & arready & ~rvalid)
-                case (araddr) 
+                case (araddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB]) 
                     'h0 : rdata <= reg_0;
                     'h1 : rdata <= reg_1;
                     'h2 : rdata <= reg_2;
@@ -195,7 +198,7 @@ module led_rgb_s_axi_lite_if (
             rresp <= '{default:0};
         else
             if (arvalid & arready & ~rvalid)
-                case (araddr)
+                case (araddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB])
                     'h0 : rresp <= '{default:0};
                     'h1 : rresp <= '{default:0};
                     'h2 : rresp <= '{default:0};
@@ -227,7 +230,7 @@ module led_rgb_s_axi_lite_if (
             reg_0 <= 'b0;
         else
             if (awvalid & awready & wvalid & wready)
-                if (awaddr == 'h00)
+                if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h00)
                 begin
                     reg_0[31:4] <= wdata[31:4];
                     reg_0[0] <= wdata[0];
@@ -241,7 +244,7 @@ module led_rgb_s_axi_lite_if (
             reg_1 <= 'b0;
         else
             if (awvalid & awready & wvalid & wready)
-                if (awaddr == 'h01)
+                if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h01)
                     reg_1[31:0] <= wdata[31:0];
         end 
 
@@ -252,7 +255,7 @@ module led_rgb_s_axi_lite_if (
             reg_2 <= 'b0;
         else
             if (awvalid & awready & wvalid & wready)
-                if (awaddr == 'h02)
+                if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h02)
                     reg_2 <= wdata;
         end 
 
@@ -263,7 +266,7 @@ module led_rgb_s_axi_lite_if (
             reg_3 <= 'b0;
         else
             if (awvalid & awready & wvalid & wready)
-                if (awaddr == 'h03)
+                if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h03)
                     reg_3 <= wdata;
         end 
 
@@ -274,7 +277,7 @@ module led_rgb_s_axi_lite_if (
             reg_4 <= 'b0;
         else
             if (awvalid & awready & wvalid & wready)
-                if (awaddr == 'h04)
+                if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h04)
                     reg_4 <= wdata;
         end 
 
@@ -285,7 +288,7 @@ module led_rgb_s_axi_lite_if (
             reg_5 <= 'b0;
         else
             if (awvalid & awready & wvalid & wready)
-                if (awaddr == 'h05)
+                if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h05)
                     reg_5 <= wdata;
         end 
 
@@ -296,7 +299,7 @@ module led_rgb_s_axi_lite_if (
             reg_6 <= 'b0;
         else
             if (awvalid & awready & wvalid & wready)
-                if (awaddr == 'h06)
+                if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h06)
                     reg_6 <= wdata;
         end 
 

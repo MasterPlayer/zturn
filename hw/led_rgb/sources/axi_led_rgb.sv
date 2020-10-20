@@ -5,7 +5,7 @@ module axi_led_rgb #(
     input                    aclk          ,
     input                    aresetn       ,
 
-    input   [  2 : 0 ]       awaddr        ,
+    input   [  4 : 0 ]       awaddr        ,
     input   [  2 : 0 ]       awprot        , // not used
     input                    awvalid       ,
     output logic             awready       ,
@@ -19,7 +19,7 @@ module axi_led_rgb #(
     output logic             bvalid        ,
     input                    bready        ,
 
-    input   [  2 : 0 ]       araddr        ,
+    input   [  4 : 0 ]       araddr        ,
     input   [  2 : 0 ]       arprot        ,
     input                    arvalid       ,
     output logic             arready       ,
