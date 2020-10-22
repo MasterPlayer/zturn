@@ -27,73 +27,41 @@ module buzzer_s_axi_lite_if (
     output logic  [  1 : 0 ] rresp         ,
     output logic             rvalid        ,
     input                    rready        ,
+    
+    input                    buzzer_active , 
 
     // connection signal group to user logic
+    output logic             resetn        , // inverse reset signal 
+    output logic             enable        ,
+    output logic [  1 : 0]   mode          ,
+    output logic [ 31 : 0]   duration_on   ,
+    output logic [ 31 : 0]   duration_off   
 
-    output logic             user_resetn              , // inverse reset signal 
-
-    output logic             mode_r                    , // mode : 0 - const led on, 1 - led blinking
-    output logic             mode_g                    , // mode : 0 - const led on, 1 - led blinking
-    output logic             mode_b                    , // mode : 0 - const led on, 1 - led blinking
-
-    output logic             enable_r                  , // enable led red
-    output logic             enable_g                  , // enable led green
-    output logic             enable_b                  , // enable led blue
-
-    output logic             holded_r                  , // hold red led if enable is set to 0
-    output logic             holded_g                  , // hold green led if enable is set to 0
-    output logic             holded_b                  , // hold blue led if enable is set to 0
-
-    output logic            [31:0] duration_r          , // interval over two blinks of led. 
-    output logic            [31:0] duration_g          ,
-    output logic            [31:0] duration_b          ,
-
-    input                   led_r_sts          , 
-    input                   led_g_sts          ,
-    input                   led_b_sts           
 
 );
 
     localparam integer ADDR_LSB = 2;
-    localparam integer ADDR_OPT = 2;
+    localparam integer ADDR_OPT = 1;
 
     logic [31:0]reg_0 = '{default:0};
     logic [31:0]reg_1 = '{default:0};
     logic [31:0]reg_2 = '{default:0};
-    logic [31:0]reg_3 = '{default:0};
-    logic [31:0]reg_4 = '{default:0};
-    logic [31:0]reg_5 = '{default:0};
-    logic [31:0]reg_6 = '{default:0};
 
     logic aw_en = 1'b1;
 
 
     always_comb begin : user_logic_assignment_group
-        user_resetn <= reg_0[0];
-        mode_r      <= reg_1[0];
-        enable_r    <= reg_1[1];
-        holded_r    <= reg_1[2];
-        duration_r  <= reg_2;
-        
-        mode_g      <= reg_3[0];
-        enable_g    <= reg_3[1];
-        holded_g    <= reg_3[2];
-        duration_g  <= reg_4;
-        
-        mode_b      <= reg_5[0];
-        enable_b    <= reg_5[1];
-        holded_b    <= reg_5[2];
-        duration_b  <= reg_6;
+        resetn          <= reg_0[0];
+        enable          <= reg_0[1];
+        mode            <= reg_0[3:2];
+        duration_on     <= reg_1;
+        duration_off    <= reg_2;
     end 
 
 
-
-    always_ff @(posedge aclk) begin : from_user_logic_assignment 
-        reg_0[1] <= led_r_sts;
-        reg_0[2] <= led_g_sts;
-        reg_0[3] <= led_b_sts;
+    always_comb begin : from_usr_logic_assignment_group 
+        reg_0[16] <= buzzer_active;
     end 
-
 
     /**/
     always_ff @(posedge aclk) begin : aw_en_processing 
@@ -183,10 +151,6 @@ module buzzer_s_axi_lite_if (
                     'h0 : rdata <= reg_0;
                     'h1 : rdata <= reg_1;
                     'h2 : rdata <= reg_2;
-                    'h3 : rdata <= reg_3;
-                    'h4 : rdata <= reg_4;
-                    'h5 : rdata <= reg_5;
-                    'h6 : rdata <= reg_6;
                     default : rdata <= rdata;
                 endcase // araddr
     end 
@@ -202,10 +166,6 @@ module buzzer_s_axi_lite_if (
                     'h0 : rresp <= '{default:0};
                     'h1 : rresp <= '{default:0};
                     'h2 : rresp <= '{default:0};
-                    'h3 : rresp <= '{default:0};
-                    'h4 : rresp <= '{default:0};
-                    'h5 : rresp <= '{default:0};
-                    'h6 : rresp <= '{default:0};
                     default : rresp <= 'b10;
                 endcase; // araddr
     end                     
@@ -217,7 +177,7 @@ module buzzer_s_axi_lite_if (
             bresp <= '{default:0};
         else
             if (awvalid & awready & wvalid & wready & ~bvalid)
-                if (awaddr >= 0 | awaddr <= 6 )
+                if (awaddr >= 0 | awaddr <= 2 )
                     bresp <= '{default:0};
                 else
                     bresp <= 'b10;
@@ -226,17 +186,18 @@ module buzzer_s_axi_lite_if (
 
     /*done*/
     always_ff @(posedge aclk) begin : reg_0_processing 
-        if (!aresetn) 
-        begin
-            reg_0[31:4] <= 'b0;
-            reg_0[0] <= 'b0;
+        if (!aresetn)
+        begin  
+            reg_0[15:0] <= 'b0;
+            reg_0[31:17] <= 'b0;
         end 
+
         else
             if (awvalid & awready & wvalid & wready)
                 if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h00)
                 begin
-                    reg_0[31:4] <= wdata[31:4];
-                    reg_0[0] <= wdata[0];
+                    reg_0[15:0] <= wdata[15:0];
+                    reg_0[31:17] <= wdata[31:17];
                 end 
         end 
 
@@ -248,7 +209,7 @@ module buzzer_s_axi_lite_if (
         else
             if (awvalid & awready & wvalid & wready)
                 if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h01)
-                    reg_1[31:0] <= wdata[31:0];
+                    reg_1 <= wdata;
         end 
 
 
@@ -261,51 +222,5 @@ module buzzer_s_axi_lite_if (
                 if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h02)
                     reg_2 <= wdata;
         end 
-
-
-    /*done*/
-    always_ff @(posedge aclk) begin : reg_3_processing 
-        if (!aresetn)
-            reg_3 <= 'b0;
-        else
-            if (awvalid & awready & wvalid & wready)
-                if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h03)
-                    reg_3 <= wdata;
-        end 
-
-
-    /*done*/
-    always_ff @(posedge aclk) begin : reg_4_processing 
-        if (!aresetn)
-            reg_4 <= 'b0;
-        else
-            if (awvalid & awready & wvalid & wready)
-                if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h04)
-                    reg_4 <= wdata;
-        end 
-
-
-    /*done*/
-    always_ff @(posedge aclk) begin : reg_5_processing 
-        if (!aresetn)
-            reg_5 <= 'b0;
-        else
-            if (awvalid & awready & wvalid & wready)
-                if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h05)
-                    reg_5 <= wdata;
-        end 
-
-
-    /*done*/
-    always_ff @(posedge aclk) begin : reg_6_processing 
-        if (!aresetn)
-            reg_6 <= 'b0;
-        else
-            if (awvalid & awready & wvalid & wready)
-                if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h06)
-                    reg_6 <= wdata;
-        end 
-
-
 
 endmodule

@@ -12,6 +12,8 @@ module buzzer
         input[ 31 : 0]  duration_on         ,
         input[ 31 : 0]  duration_off        ,
 
+        output logic    buzzer_active       , 
+
         output logic BUZZER_OUT               // to output on board
     );
 
@@ -65,6 +67,15 @@ module buzzer
 
             endcase
         end 
+
+    always_comb begin : buzzer_active_processing 
+        case (current_state)
+            BEEP_ON_ST : 
+                buzzer_active <= 1'b1;
+            default : 
+                buzzer_active <= 1'b0;
+        endcase // current_state
+    end 
 
     always_ff @(posedge clk) begin : duration_on_cnt_processing
         case (current_state) 
