@@ -1,4 +1,4 @@
-`timescale 1 ns / 1 ps
+`timescale 1ns / 1ps
 
 module switch_ctrlr_x4_s_axi_lite_if (
     input               aclk,

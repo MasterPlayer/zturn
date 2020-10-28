@@ -1,3 +1,5 @@
+`timescale 1ps / 1ps
+
 
 module axi_led_rgb #(
     parameter INVERSE_MODE = 1
