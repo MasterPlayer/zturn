@@ -43,8 +43,9 @@ module axis_iic_mgr #(
     logic                   in_empty           ;
 
     typedef enum {
-        IDLE_ST     ,
-        TX_ADDR  , 
+        IDLE_ST                 ,
+        START_TRANSMISSION_ST   ,
+        TX_ADDR                 ,
         WAIT_ACK    
     } fsm;
 
@@ -60,7 +61,11 @@ module axis_iic_mgr #(
             case (current_state)
                 IDLE_ST : 
                     if (!cmd_empty)
-                        current_state <= TX_ADDR;
+                        current_state <= START_TRANSMISSION_ST;
+
+                START_TRANSMISSION_ST : 
+                    current_state <= TX_ADDR;
+
 
                 TX_ADDR :
                     if (bit_cnt == 0)
@@ -68,21 +73,21 @@ module axis_iic_mgr #(
 
 
                 WAIT_ACK : 
-                    current_state <= IDLE_ST;
+                    current_state <= current_state;
+
+
             endcase
 
     end 
 
     always_ff @(posedge clk_i2c) begin : bit_cnt_processing 
         case (current_state) 
-            IDLE_ST : 
-                bit_cnt <= 7;
 
             TX_ADDR : 
                 if (bit_cnt != 0)
                     bit_cnt <= bit_cnt - 1;
 
-            WAIT_ACK :
+            default :
                 bit_cnt <= 7;
         endcase // current_state
     end 
@@ -96,6 +101,45 @@ module axis_iic_mgr #(
 
     end 
 
+    always_ff @(posedge clk_i2c) begin : iic_signal_definition 
+        case (current_state) 
+            IDLE_ST : 
+                if (!cmd_empty)
+                    // SDA_I <= 1'b0;
+                    SDA_T <= 1'b0;
+                else
+                    // SDA_I <= 1'b1;
+                    SDA_T <= 1'b1;
+
+            START_TRANSMISSION_ST : 
+                SDA_T <= 1'b0;
+
+            TX_ADDR : 
+                // SDA_I <= in_dout_user[bit_cnt];
+                SDA_T <= in_dout_user[bit_cnt];
+
+            default : 
+                SDA_T <= 1'b1;
+        endcase
+
+    end 
+
+    always_comb begin: iic_scl_processing 
+        case (current_state) 
+            IDLE_ST : 
+                SCL_T <= 1'b1;
+
+            START_TRANSMISSION_ST : 
+                SCL_T <= 1'b1;
+
+            TX_ADDR : 
+                SCL_T <= clk_i2c;
+
+            default :
+                SCL_T <= 1'b1;
+
+        endcase // current_state
+    end 
 
 
     fifo_cmd_async_xpm #(
