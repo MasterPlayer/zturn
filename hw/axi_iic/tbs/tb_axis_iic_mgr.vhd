@@ -19,34 +19,44 @@ architecture Behavioral of tb_axis_iic_mgr is
 
     component axis_iic_mgr
         generic (
-            N_BYTES : integer := 32     
+            CLK_PERIOD          :           integer     :=  100000000                           ;
+            CLK_I2C_PERIOD      :           integer     :=  400000                              ;
+            N_BYTES             :           integer     :=  32                                  
         ); 
         port (
-            clk             :   in      std_logic                                           ;
-            resetn          :   in      std_logic                                           ;
-            clk_i2c         :   in      std_logic                                           ;
-            s_axis_tdata    :   in      std_logic_vector ( ((N_BYTES*8)-1) downto 0 )       ;
-            s_axis_tkeep    :   in      std_logic_vector (         N_BYTES-1 downto 0 )     ;
-            s_axis_tuser    :   in      std_logic_vector (                 7 downto 0 )     ;
-            s_axis_tvalid   :   in      std_logic                                           ;
-            s_axis_tready   :   out     std_logic                                           ;
-            s_axis_tlast    :   in      std_logic                                           ;
-            m_axis_tdata    :   out     std_logic_vector ( ((N_BYTES*8)-1) downto 0 )       ;
-            m_axis_tkeep    :   out     std_logic_vector (         N_BYTES-1 downto 0 )     ;
-            m_axis_tvalid   :   out     std_logic                                           ;
-            m_axis_tready   :   in      std_logic                                           ;
-            m_axis_tlast    :   out     std_logic                                           ;
+            clk                 :   in      std_logic                                           ;
+            resetn              :   in      std_logic                                           ;
+            
+            s_axis_cmd_tdata    :   in      std_logic_vector ( 15 downto 0 )                    ;
+            s_axis_cmd_tvalid   :   in      std_logic                                           ;
+            s_axis_cmd_tready   :   out     std_logic                                           ;
 
-            SCL_I           :   in      std_logic                                           ;
-            SDA_I           :   in      std_logic                                           ;
-            SCL_T           :   out     std_logic                                           ;
-            SDA_T           :   out     std_logic                                            
+            s_axis_tdata        :   in      std_logic_vector ( ((N_BYTES*8)-1) downto 0 )       ;
+            s_axis_tkeep        :   in      std_logic_vector (         N_BYTES-1 downto 0 )     ;
+            s_axis_tvalid       :   in      std_logic                                           ;
+            s_axis_tready       :   out     std_logic                                           ;
+            s_axis_tlast        :   in      std_logic                                           ;
+
+            m_axis_tdata        :   out     std_logic_vector ( ((N_BYTES*8)-1) downto 0 )       ;
+            m_axis_tkeep        :   out     std_logic_vector (         N_BYTES-1 downto 0 )     ;
+            m_axis_tvalid       :   out     std_logic                                           ;
+            m_axis_tready       :   in      std_logic                                           ;
+            m_axis_tlast        :   out     std_logic                                           ;
+
+            SCL_I               :   in      std_logic                                           ;
+            SDA_I               :   in      std_logic                                           ;
+            SCL_T               :   out     std_logic                                           ;
+            SDA_T               :   out     std_logic                                           
         );
     end component;
 
     
     signal  resetn        :        std_logic                                       := '0'               ;
-    signal  clk_i2c       :        std_logic                                       := '0'               ;
+
+    signal  s_axis_cmd_tdata    :           std_logic_vector ( 15 downto 0 )  := (others => '0')   ;
+    signal  s_axis_cmd_tvalid   :           std_logic                         := '0'               ;
+    signal  s_axis_cmd_tready   :           std_logic                         := '0'               ;
+
 
     signal  s_axis_tdata  :        std_logic_vector ( ((N_BYTES*8)-1) downto 0 )   := (others => '0')   ;
     signal  s_axis_tkeep  :        std_logic_vector (         N_BYTES-1 downto 0 ) := (others => '0')   ;
@@ -103,17 +113,53 @@ architecture Behavioral of tb_axis_iic_mgr is
     signal  i2c_scl     :         std_logic                                             ;
 
 
-    component i2c_slave_controller
-        port (
-            SDA :  inout  std_logic ;
-            SCL :  inout  std_logic  
-        );
-    end component;
+    --component i2c_slave_controller
+    --    port (
+    --        SDA :  inout  std_logic ;
+    --        SCL :  inout  std_logic  
+    --    );
+    --end component;
+
+
+
+    --component i2c_master
+    --    generic(
+    --        input_clk : integer := 100_000_000; --input clock speed from user logic in hz
+    --        bus_clk   : integer := 400_000
+    --    );
+    --    port(
+    --        CLK       : in     std_logic;                    --system clock
+    --        RESET_N   : in     std_logic;                    --active low reset
+    --        ENA       : in     std_logic;                    --latch in command
+    --        ADDR      : in     std_logic_vector(6 downto 0); --address of target slave
+    --        RW        : in     std_logic;                    --'0' is write, '1' is read
+    --        DATA_WR   : in     std_logic_vector(7 downto 0); --data to write to slave
+    --        BUSY      : out    std_logic;                    --indicates transaction in progress
+    --        DATA_RD   : out    std_logic_vector(7 downto 0); --data read from slave
+    --        ACK_ERROR : buffer std_logic;                    --flag if improper acknowledge from slave
+    --        SDA       : inout  std_logic;                    --serial data output of i2c bus
+    --        SCL       : inout  std_logic
+    --    );                   --serial clock output of i2c bus
+    --end component;
+
+
+    --signal  M_CLK       :   std_logic                           := '0'                      ;                    --system clock
+    --signal  M_RESET_N   :   std_logic                           := '0'                      ;                    --active low reset
+    --signal  M_ENA       :   std_logic                           := '0'                      ;                    --latch in command
+    --signal  M_ADDR      :   std_logic_vector (  6 downto 0 )    := (others => '0')          ; --address of target slave
+    --signal  M_RW        :   std_logic                           := '0'                      ;                    --'0' is write, '1' is read
+    --signal  M_DATA_WR   :   std_logic_vector (  7 downto 0 )    := (others => '0')          ; --data to write to slave
+    --signal  M_BUSY      :   std_logic                                                       ;                    --indicates transaction in progress
+    --signal  M_DATA_RD   :   std_logic_vector (  7 downto 0 )                                ; --data read from slave
+    --signal  M_ACK_ERROR :   std_logic                                                       ;                    --flag if improper acknowledge from slave
+    --signal  M_SDA       :   std_logic                                                       ;                    --serial data output of i2c bus
+    --signal  M_SCL       :   std_logic                                                       ;
+
+
 
 begin
 
     CLK <= not CLK after clk_period/2;
-    clk_i2c <= not clk_i2c after clk_period/2;
 
     i_processing : process(CLK)
     begin
@@ -122,7 +168,7 @@ begin
         end if;
     end process;
 
-    resetn <= '0' when i < 10 else '1';
+    resetn <= '0' when i < 800 else '1';
     rst <= not resetn;
 
     axis_iic_mgr_inst : axis_iic_mgr
@@ -130,26 +176,78 @@ begin
             N_BYTES         =>  N_BYTES     
         )
         port map  (
-            clk             =>  clk                                 ,
-            resetn          =>  resetn                              ,
-            clk_i2c         =>  clk_i2c                             ,
-            s_axis_tdata    =>  s_axis_tdata                        ,
-            s_axis_tkeep    =>  s_axis_tkeep                        ,
-            s_axis_tuser    =>  s_axis_tuser                        ,
-            s_axis_tvalid   =>  s_axis_tvalid                       ,
-            s_axis_tready   =>  s_axis_tready                       ,
-            s_axis_tlast    =>  s_axis_tlast                        ,
-            m_axis_tdata    =>  m_axis_tdata                        ,
-            m_axis_tkeep    =>  m_axis_tkeep                        ,
-            m_axis_tvalid   =>  m_axis_tvalid                       ,
-            m_axis_tready   =>  m_axis_tready                       ,
-            m_axis_tlast    =>  m_axis_tlast                        ,
+            clk                 =>  clk                     ,
+            resetn              =>  resetn                  ,
 
-            SCL_I           =>  SCL_I                               ,
-            SDA_I           =>  SDA_I                               ,
-            SCL_T           =>  SCL_T                               ,
-            SDA_T           =>  SDA_T                                
+            s_axis_cmd_tdata    =>  s_axis_cmd_tdata        ,
+            s_axis_cmd_tvalid   =>  s_axis_cmd_tvalid       ,
+            s_axis_cmd_tready   =>  s_axis_cmd_tready       ,
+
+            s_axis_tdata        =>  s_axis_tdata            ,
+            s_axis_tkeep        =>  s_axis_tkeep            ,
+            s_axis_tvalid       =>  s_axis_tvalid           ,
+            s_axis_tready       =>  s_axis_tready           ,
+            s_axis_tlast        =>  s_axis_tlast            ,
+
+            m_axis_tdata        =>  m_axis_tdata            ,
+            m_axis_tkeep        =>  m_axis_tkeep            ,
+            m_axis_tvalid       =>  m_axis_tvalid           ,
+            m_axis_tready       =>  m_axis_tready           ,
+            m_axis_tlast        =>  m_axis_tlast            ,
+
+            SCL_I               =>  SCL_I                   ,
+            SDA_I               =>  SDA_I                   ,
+            SCL_T               =>  SCL_T                   ,
+            SDA_T               =>  SDA_T                   
         );
+
+    SCL_I <= SCL_T;
+
+    sda_i_processing : process(CLK)
+    begin
+        if CLK'event AND CLK = '1' then 
+            case i is 
+                when 0 => SDA_I <= '1';
+                when 1062 => SDA_I <= '0';
+                when 1312 => SDA_I <= '1';
+                when 1562 => SDA_I <= '0';
+                when 2062 => SDA_I <= '1';
+                when 2312 => SDA_I <= '0';
+                when 2812 => SDA_I <= '1';
+                when 3312 => SDA_I <= '0';
+                when 4062 => SDA_I <= '1';
+                when 4312 => SDA_I <= '0';
+                when 4562 => SDA_I <= '1';
+                when 4812 => SDA_I <= '0';
+                when 5812 => SDA_I <= '1';
+                when 6062 => SDA_I <= '0';
+                when 6312 => SDA_I <= '1';
+                when 6562 => SDA_I <= '0';
+                when 7812 => SDA_I <= '1';
+                when 8062 => SDA_I <= '0';
+                when 8312 => SDA_I <= '1';
+                
+                
+                
+                
+                
+                
+                --when 2062 => SDA_I <= '1';
+                --when 2062 => SDA_I <= '1';
+                --when 2062 => SDA_I <= '1';
+                --when 2062 => SDA_I <= '1';
+                --when 2062 => SDA_I <= '1';
+                --when 2062 => SDA_I <= '1';
+                --when 2062 => SDA_I <= '1';
+                --when 2062 => SDA_I <= '1';
+
+
+
+                when others =>
+                    SDA_I <= SDA_I;
+            end case;
+        end if;
+    end process;
 
 
 
@@ -223,15 +321,69 @@ begin
     --end process;
 
 
+    s_axis_cmd_processing : process(CLK)
+    begin
+        if CLK'event aND CLK = '1' then 
+            case i is 
+                when 1000   => s_axis_cmd_tdata <= x"0293"; s_axis_cmd_tvalid <= '1';
+                when 1001   => s_axis_cmd_tdata <= x"0092"; s_axis_cmd_tvalid <= '1';
+                when others => s_axis_cmd_tdata <= s_axis_cmd_tdata; s_axis_cmd_tvalid <= '0';
+            end case;   
+        end if;
+    end process;
+
     s_axis_processing : process(CLK)
     begin
         if CLK'event aND CLK = '1' then 
             case i is 
-                when 100    => s_axis_tdata <= x"03020100"; s_axis_tvalid <= '1'; s_axis_tlast <= '1'; s_axis_tuser <= x"A5";
-                when others => s_axis_tdata <= s_axis_tdata; s_axis_tvalid <= '0'; s_axis_tlast <= s_axis_tlast; s_axis_tuser <= s_axis_tuser;
+                when 1000   => s_axis_tdata <= x"00000000"; s_axis_tkeep <= x"1"; s_axis_tvalid <= '1'; s_axis_tlast <= '1';
+                when others => s_axis_tdata <= s_axis_tdata; s_axis_tkeep <= s_axis_tkeep; s_axis_tvalid <= '0'; s_axis_tlast <= s_axis_tlast; 
             end case;   
         end if;
     end process;
+
+
+
+
+
+    --i2c_master_inst : i2c_master
+    --    generic map (
+    --        input_clk   =>  100_000_000     , --input clock speed from user logic in hz
+    --        bus_clk     =>  400_000
+    --    )
+    --    port map (
+    --        CLK         =>  M_CLK             ,
+    --        RESET_N     =>  M_RESET_N         ,
+    --        ENA         =>  M_ENA             ,
+    --        ADDR        =>  M_ADDR            ,
+    --        RW          =>  M_RW              ,
+    --        DATA_WR     =>  M_DATA_WR         ,
+    --        BUSY        =>  M_BUSY            ,
+    --        DATA_RD     =>  M_DATA_RD         ,
+    --        ACK_ERROR   =>  M_ACK_ERROR       ,
+    --        SDA         =>  M_SDA             ,
+    --        SCL         =>  M_SCL              
+    --    );                   --serial clock output of i2c bus
+
+    --M_CLK <= CLK ;
+
+    --M_RESET_N <= '0' when i < 10 else '1';
+
+    --inp_processing : process(CLK)
+    --begin
+    --    if CLK'event AND CLK = '1' then 
+    --        if M_BUSY = '1' then 
+    --            M_ENA <= '0';
+    --        else
+    --            case i is
+    --                when 1000 =>  M_ENA <= '1'; M_ADDR <= "1010101"; M_RW <= '0'; M_DATA_WR <= x"DD";
+    --                when others => M_ENA <= M_ENA; M_ADDR <= M_ADDR; M_RW <= M_RW; M_DATA_WR <= M_DATA_WR;
+
+    --            end case;
+    --        end if;
+    --    end if;
+    --end process;
+
 
 
 end Behavioral;
