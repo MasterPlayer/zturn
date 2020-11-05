@@ -48,7 +48,9 @@ module axis_iic_mgr #(
     typedef enum {
         IDLE_ST                 ,
         START_TRANSMISSION_ST   ,
+        STOP_TRANSMISSION_ST    ,
         TX_ADDR_ST              ,
+
         WAIT_ACK_ST             ,
         READ_ST                 ,
         WAIT_RD_ACK_ST          ,
@@ -114,14 +116,8 @@ module axis_iic_mgr #(
         else
             if (i2c_clk_assertion)
                 case (current_state)
-                        WAIT_WR_ACK_ST : 
-                            if (bit_cnt == 0)
-                                if (!in_dout_keep_shft[0])
-                                    cmd_rden <= 1'b1;
-
-                        WAIT_RD_ACK_ST :
-                            if (!rd_byte_reg)
-                                cmd_rden <= 1'b1;
+                        STOP_TRANSMISSION_ST :
+                            cmd_rden <= 1'b1;
 
                         default : 
                             cmd_rden <= 1'b0;
@@ -171,7 +167,10 @@ module axis_iic_mgr #(
             bus_i2c_clk <= 1'b0;
     end 
 
-    /*fsm*/
+    /*fsm
+    * All transmissions over states must be sets according with i2c_clk_assertion 
+    * in other case fsm must wait asserion this signal
+    */
     always_ff @(posedge clk) begin : fsm_processing
         if (reset)
             current_state <= IDLE_ST;
@@ -179,21 +178,38 @@ module axis_iic_mgr #(
             if (i2c_clk_assertion)
                 case (current_state)
                     IDLE_ST : 
-                        if (!cmd_empty) 
-                            current_state <= START_TRANSMISSION_ST;
-                        
+                        if (!cmd_empty)
+                            if (!cmd_dout[0]) begin 
+                                if (!in_empty)
+                                    // if commanq queue isnt empty and data queue isnt empty and cmd = WRITE
+                                    current_state <= START_TRANSMISSION_ST;
+                            end else
+                                // perform reading operation
+                                current_state <= START_TRANSMISSION_ST;
+
+                    /*establish START for I2C transaction*/
                     START_TRANSMISSION_ST : 
                         current_state <= TX_ADDR_ST;
 
+                    /*Transmission address + command operation*/
                     TX_ADDR_ST : 
                         if (bit_cnt == 0)
-                            current_state <= WAIT_ACK_ST;
+                            current_state <= IDLE_ST;
+                            // current_state <= WAIT_ACK_ST;
 
+                    /*transmit STOP flaq on i2c bus*/
+                    STOP_TRANSMISSION_ST : 
+                        current_state <= IDLE_ST;
+
+                    /*WAIT ACK signal from slave after WRITE ADDRESS operation*/
+                    /*ACK = '0' from slave on SDA bus */
+                    /*if no ACK then exit*/
                     WAIT_ACK_ST :
-                        if (cmd_dout[0])
-                            current_state <= READ_ST;
-                        else
-                            current_state <= WRITE_ST;
+                        current_state <= STUB_ST;
+                        // if (cmd_dout[0])
+                        //     current_state <= READ_ST;
+                        // else
+                        //     current_state <= WRITE_ST;
 
                     READ_ST : 
                         if (bit_cnt == 0)
@@ -210,12 +226,13 @@ module axis_iic_mgr #(
                             current_state <= WAIT_WR_ACK_ST;
 
                     WAIT_WR_ACK_ST : 
-                        if (bit_cnt == 0)
-                            if (in_dout_keep_shft[0])
-                                if (in_dout_last)
-                                    current_state <= IDLE_ST;
-                                else
-                                    current_state <= WRITE_ST;
+                        if (in_dout_keep_shft[0])
+                            if (in_dout_last)
+                                current_state <= IDLE_ST;
+                            else
+                                current_state <= WRITE_ST;
+                        else
+                            current_state <= WRITE_ST;
 
                     RD_STOP_ST : 
                         current_state <= IDLE_ST;
@@ -235,26 +252,34 @@ module axis_iic_mgr #(
                 case (current_state)
                     IDLE_ST : 
                         if (!cmd_empty)
-                            SDA_T <= 1'b0;
+                            if (!cmd_dout[0]) begin 
+                                if (!in_empty)
+                                    SDA_T <= 1'b0;
+                            end else
+                                SDA_T <= 1'b0;
+                    // IDLE_ST : 
+                    //     if (!cmd_empty)
+                    //         SDA_T <= 1'b0;
+
 
                     START_TRANSMISSION_ST :
                         SDA_T <= cmd_dout[bit_cnt];
 
+                    STOP_TRANSMISSION_ST : 
+                        SDA_T <= 1'b1;
+
                     TX_ADDR_ST : 
-                        if (bit_cnt != 0)
+                        if (bit_cnt)
                             SDA_T <= cmd_dout[bit_cnt-1];
                         else
                             SDA_T <= 1'b1;
 
                     WAIT_ACK_ST :
-                        if (!cmd_dout[0])
-                            SDA_T <= in_dout_data_shft[bit_cnt];
-                        else
-                            SDA_T <= 1'b1;
+                        SDA_T <= 1'b1;
 
                     WRITE_ST : 
                         if (bit_cnt != 0)
-                            SDA_T <= in_dout_data_shft[bit_cnt-1];
+                            SDA_T <= in_dout_data_shft[bit_cnt];
                         else
                             SDA_T <= 1'b1;
 
@@ -276,8 +301,15 @@ module axis_iic_mgr #(
     always_ff @(posedge clk) begin : SCL_T_processing 
         case (current_state)
             START_TRANSMISSION_ST : 
+                /*START transaction on I2C bus must be started if i2c clk deasserted*/
                 if (i2c_clk_deassertion) 
                     SCL_T <= 1'b0;
+
+            /*Transmit STOP state : SCL must be asserted if deassert i2c clk*/
+            STOP_TRANSMISSION_ST : 
+                if (i2c_clk_deassertion)
+                    SCL_T <= 1'b1;
+
 
             TX_ADDR_ST : 
                 SCL_T <= bus_i2c_clk;
@@ -336,6 +368,9 @@ module axis_iic_mgr #(
         else
             if (i2c_clk_assertion)
                 case (current_state)
+
+                    IDLE_ST : 
+                        bit_cnt <= 7;
                     
                     TX_ADDR_ST :
                         if (bit_cnt != 0)
@@ -343,17 +378,17 @@ module axis_iic_mgr #(
                         else
                             bit_cnt <= 7;
 
-                    WRITE_ST : 
-                        if (bit_cnt != 0) 
-                            bit_cnt <= bit_cnt - 1;
-                        else
-                            bit_cnt <= 7;
+                    // WRITE_ST : 
+                    //     if (bit_cnt != 0) 
+                    //         bit_cnt <= bit_cnt - 1;
+                    //     else
+                    //         bit_cnt <= 7;
 
-                    READ_ST : 
-                        if (bit_cnt != 0)
-                            bit_cnt <= bit_cnt - 1;
-                        else
-                            bit_cnt <= 7;
+                    // READ_ST : 
+                    //     if (bit_cnt != 0)
+                    //         bit_cnt <= bit_cnt - 1;
+                    //     else
+                    //         bit_cnt <= 7;
 
 
                 endcase
@@ -425,7 +460,7 @@ module axis_iic_mgr #(
 
     always_ff @(posedge clk) begin : in_rden_processing
         if (reset)
-            cmd_rden <= 1'b0;
+            in_rden <= 1'b0;
         else
             if (i2c_clk_assertion)
                 case (current_state)

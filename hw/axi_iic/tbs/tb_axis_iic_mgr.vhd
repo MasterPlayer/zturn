@@ -76,8 +76,8 @@ architecture Behavioral of tb_axis_iic_mgr is
     signal  SCL_T         :        std_logic                                                            ;
     signal  SDA_T         :        std_logic                                                            ;
 
-    signal  SCL_IO        :        std_logic    ;
-    signal  SDA_IO        :        std_logic    ;
+    signal  SCL_IO        :        std_logic := 'Z'   ;
+    signal  SDA_IO        :        std_logic := 'Z'   ;
 
 
     constant clk_period : time := 10 ns;
@@ -265,32 +265,32 @@ begin
     --    );
 
 
-    --scl_iobuf_inst : IOBUF
-    --    --generic map (
-    --    --    DRIVE           =>  12,
-    --    --    IOSTANDARD      =>  "DEFAULT",
-    --    --    SLEW            =>  "SLOW"
-    --    --)
-    --    port map (
-    --        O               =>  SCL_I                               ,     -- Buffer output
-    --        IO              =>  '1'                                 ,   -- Buffer inout port (connect directly to top-level port)
-    --        I               =>  '0'                                 ,     -- Buffer input
-    --        T               =>  SCL_T                                     -- 3-state enable input, high=input, low=output 
-    --    );
+    scl_iobuf_inst : IOBUF
+        --generic map (
+        --    DRIVE           =>  12,
+        --    IOSTANDARD      =>  "DEFAULT",
+        --    SLEW            =>  "SLOW"
+        --)
+        port map (
+            O               =>  open                                ,     -- Buffer output
+            IO              =>  SCL_IO                              ,   -- Buffer inout port (connect directly to top-level port)
+            I               =>  '0'                                 ,     -- Buffer input
+            T               =>  SCL_T                                     -- 3-state enable input, high=input, low=output 
+        );
 
 
-    --sda_iobuf_inst : IOBUF
-    --    --generic map (
-    --    --    DRIVE           =>  12,
-    --    --    IOSTANDARD      =>  "DEFAULT",
-    --    --    SLEW            =>  "SLOW"
-    --    --)
-    --    port map (
-    --        O               =>  SDA_I                               ,     -- Buffer output
-    --        IO              =>  '1'                                 ,   -- Buffer inout port (connect directly to top-level port)
-    --        I               =>  '0'                                 ,     -- Buffer input
-    --        T               =>  SDA_T                                     -- 3-state enable input, high=input, low=output 
-    --    );
+    sda_iobuf_inst : IOBUF
+        --generic map (
+        --    DRIVE           =>  12,
+        --    IOSTANDARD      =>  "DEFAULT",
+        --    SLEW            =>  "SLOW"
+        --)
+        port map (
+            O               =>  open                                ,     -- Buffer output
+            IO              =>  SDA_IO                              ,   -- Buffer inout port (connect directly to top-level port)
+            I               =>  '0'                                 ,     -- Buffer input
+            T               =>  SDA_T                                     -- 3-state enable input, high=input, low=output 
+        );
 
 
     --i2c_controller_inst : i2c_controller 
@@ -325,7 +325,7 @@ begin
     begin
         if CLK'event aND CLK = '1' then 
             case i is 
-                when 1000   => s_axis_cmd_tdata <= x"0293"; s_axis_cmd_tvalid <= '1';
+                --when 1000   => s_axis_cmd_tdata <= x"0293"; s_axis_cmd_tvalid <= '1';
                 when 1001   => s_axis_cmd_tdata <= x"0092"; s_axis_cmd_tvalid <= '1';
                 when others => s_axis_cmd_tdata <= s_axis_cmd_tdata; s_axis_cmd_tvalid <= '0';
             end case;   
@@ -336,7 +336,8 @@ begin
     begin
         if CLK'event aND CLK = '1' then 
             case i is 
-                when 1000   => s_axis_tdata <= x"00000000"; s_axis_tkeep <= x"1"; s_axis_tvalid <= '1'; s_axis_tlast <= '1';
+                when 1000   => s_axis_tdata <= x"AAAAAAAA"; s_axis_tkeep <= x"F"; s_axis_tvalid <= '1'; s_axis_tlast <= '0';
+                --when 1001   => s_axis_tdata <= x"BBBBBBBB"; s_axis_tkeep <= x"F"; s_axis_tvalid <= '1'; s_axis_tlast <= '1';
                 when others => s_axis_tdata <= s_axis_tdata; s_axis_tkeep <= s_axis_tkeep; s_axis_tvalid <= '0'; s_axis_tlast <= s_axis_tlast; 
             end case;   
         end if;
