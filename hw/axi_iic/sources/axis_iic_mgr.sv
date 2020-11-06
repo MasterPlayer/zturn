@@ -631,6 +631,8 @@ module axis_iic_mgr #(
             if (i2c_clk_assertion)
                 case (current_state)
 
+                    
+
                     READ_ST : 
                         if (bit_cnt == 0)
                             out_din_keep <= {out_din_keep[N_BYTES-2:0], 1'b1};

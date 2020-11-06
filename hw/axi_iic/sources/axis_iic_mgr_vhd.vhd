@@ -36,8 +36,8 @@ entity axis_iic_mgr_vhd is
         SCL_T                 :   out     std_logic                                       ;
         SDA_T                 :   out     std_logic                                        
     );
-    attribute DONT_TOUCH                    :           string                                                  ;
-    attribute DONT_TOUCH of axis_iic_mgr_vhd      :   entity is "true";
+    --attribute DONT_TOUCH                    :           string                                                  ;
+    --attribute DONT_TOUCH of axis_iic_mgr_vhd      :   entity is "true";
 end axis_iic_mgr_vhd;
 
 
