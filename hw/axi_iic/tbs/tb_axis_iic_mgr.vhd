@@ -4,6 +4,9 @@ library IEEE;
     use ieee.std_logic_unsigned.all;
     use ieee.std_logic_arith.all;
 
+    use ieee.std_logic_textio.all;
+    use std.textio.all;
+
 
 library UNISIM;
     use UNISIM.VComponents.all;
@@ -112,6 +115,7 @@ architecture Behavioral of tb_axis_iic_mgr is
     signal  i2c_sda     :         std_logic                                             ;
     signal  i2c_scl     :         std_logic                                             ;
 
+    signal  sinegen_hex     :           std_logic_Vector ( 15 downto 0 ) := (others => '0');
 
     --component i2c_slave_controller
     --    port (
@@ -156,6 +160,7 @@ architecture Behavioral of tb_axis_iic_mgr is
     --signal  M_SCL       :   std_logic                                                       ;
 
 
+    file fptr                   :           text                                        ;
 
 begin
 
@@ -203,30 +208,95 @@ begin
 
     SCL_I <= SCL_T;
 
+    m_axis_tready <= '1';
+
     sda_i_processing : process(CLK)
     begin
         if CLK'event AND CLK = '1' then 
             case i is 
                 when 0 => SDA_I <= '1';
-                when 1062 => SDA_I <= '0';
-                when 1312 => SDA_I <= '1';
-                when 1562 => SDA_I <= '0';
-                when 2062 => SDA_I <= '1';
-                when 2312 => SDA_I <= '0';
-                when 2812 => SDA_I <= '1';
-                when 3312 => SDA_I <= '0';
-                when 4062 => SDA_I <= '1';
-                when 4312 => SDA_I <= '0';
-                when 4562 => SDA_I <= '1';
-                when 4812 => SDA_I <= '0';
-                when 5812 => SDA_I <= '1';
-                when 6062 => SDA_I <= '0';
-                when 6312 => SDA_I <= '1';
-                when 6562 => SDA_I <= '0';
-                when 7812 => SDA_I <= '1';
-                when 8062 => SDA_I <= '0';
-                when 8312 => SDA_I <= '1';
                 
+                when (1062 + (250* 0)) => SDA_I <= '0';
+                when (1062 + (250* 1)) => SDA_I <= '1';
+                when (1062 + (250* 2)) => SDA_I <= '0';
+                when (1062 + (250* 3)) => SDA_I <= '0';
+                when (1062 + (250* 4)) => SDA_I <= '1';
+                when (1062 + (250* 5)) => SDA_I <= '0';
+                when (1062 + (250* 6)) => SDA_I <= '0';
+                when (1062 + (250* 7)) => SDA_I <= '1';
+
+                when (1062 + (250* 8)) => SDA_I <= '1';
+                
+                when (1062 + (250* 9)) => SDA_I <= '0';
+                when (1062 + (250*10)) => SDA_I <= '0';
+                when (1062 + (250*11)) => SDA_I <= '0';
+                when (1062 + (250*12)) => SDA_I <= '1';
+                when (1062 + (250*13)) => SDA_I <= '0';
+                when (1062 + (250*14)) => SDA_I <= '1';
+                when (1062 + (250*15)) => SDA_I <= '0';
+                when (1062 + (250*16)) => SDA_I <= '0';
+                
+                when (1062 + (250*17)) => SDA_I <= '0';
+
+                when (1062 + (250*18)) => SDA_I <= '0';
+                when (1062 + (250*19)) => SDA_I <= '0';
+                when (1062 + (250*20)) => SDA_I <= '0';
+                when (1062 + (250*21)) => SDA_I <= '0';
+                when (1062 + (250*22)) => SDA_I <= '0';
+                when (1062 + (250*23)) => SDA_I <= '0';
+                when (1062 + (250*24)) => SDA_I <= '0';
+                when (1062 + (250*25)) => SDA_I <= '0';
+                
+                when (1062 + (250*26)) => SDA_I <= '0';
+
+                when (1062 + (250*27)) => SDA_I <= '0';
+                when (1062 + (250*28)) => SDA_I <= '0';
+                when (1062 + (250*29)) => SDA_I <= '0';
+                when (1062 + (250*30)) => SDA_I <= '1';
+                when (1062 + (250*31)) => SDA_I <= '0';
+                when (1062 + (250*32)) => SDA_I <= '1';
+                when (1062 + (250*33)) => SDA_I <= '0';
+                when (1062 + (250*34)) => SDA_I <= '0';
+                
+                when (1062 + (250*35)) => SDA_I <= '0';
+
+                when (1062 + (250*36)) => SDA_I <= '0';
+                when (1062 + (250*37)) => SDA_I <= '0';
+                when (1062 + (250*38)) => SDA_I <= '0';
+                when (1062 + (250*39)) => SDA_I <= '0';
+                when (1062 + (250*40)) => SDA_I <= '0';
+                when (1062 + (250*41)) => SDA_I <= '0';
+                when (1062 + (250*42)) => SDA_I <= '0';
+                when (1062 + (250*43)) => SDA_I <= '0';
+                
+                when (1062 + (250*44)) => SDA_I <= '0';
+
+                when (1062 + (250*45)) => SDA_I <= '0';
+                when (1062 + (250*46)) => SDA_I <= '0';
+                when (1062 + (250*47)) => SDA_I <= '0';
+                when (1062 + (250*48)) => SDA_I <= '1';
+                when (1062 + (250*49)) => SDA_I <= '0';
+                when (1062 + (250*50)) => SDA_I <= '1';
+                when (1062 + (250*51)) => SDA_I <= '0';
+                when (1062 + (250*52)) => SDA_I <= '0';
+                
+                when (1062 + (250*53)) => SDA_I <= '0';
+
+                when (1062 + (250*54)) => SDA_I <= '0';
+                when (1062 + (250*55)) => SDA_I <= '0';
+                when (1062 + (250*56)) => SDA_I <= '0';
+                when (1062 + (250*57)) => SDA_I <= '0';
+                when (1062 + (250*58)) => SDA_I <= '0';
+                when (1062 + (250*59)) => SDA_I <= '0';
+                when (1062 + (250*60)) => SDA_I <= '0';
+                when (1062 + (250*61)) => SDA_I <= '0';
+                
+                when (1062 + (250*62)) => SDA_I <= '0';
+
+                when (1062 + (250*63)) => SDA_I <= '1';
+                when (1062 + (250*64)) => SDA_I <= '0';
+                when (1062 + (250*65)) => SDA_I <= '0';
+
                 
                 
                 
@@ -326,7 +396,8 @@ begin
         if CLK'event aND CLK = '1' then 
             case i is 
                 --when 1000   => s_axis_cmd_tdata <= x"0293"; s_axis_cmd_tvalid <= '1';
-                when 1001   => s_axis_cmd_tdata <= x"0092"; s_axis_cmd_tvalid <= '1';
+                when 1001   => s_axis_cmd_tdata <= x"0693"; s_axis_cmd_tvalid <= '1';
+                --when 1002   => s_axis_cmd_tdata <= x"0092"; s_axis_cmd_tvalid <= '1';
                 when others => s_axis_cmd_tdata <= s_axis_cmd_tdata; s_axis_cmd_tvalid <= '0';
             end case;   
         end if;
@@ -336,15 +407,12 @@ begin
     begin
         if CLK'event aND CLK = '1' then 
             case i is 
-                when 1000   => s_axis_tdata <= x"AAAAAAAA"; s_axis_tkeep <= x"F"; s_axis_tvalid <= '1'; s_axis_tlast <= '0';
-                --when 1001   => s_axis_tdata <= x"BBBBBBBB"; s_axis_tkeep <= x"F"; s_axis_tvalid <= '1'; s_axis_tlast <= '1';
+                when 1000   => s_axis_tdata <= x"04030201"; s_axis_tkeep <= x"1"; s_axis_tvalid <= '1'; s_axis_tlast <= '0';
+                when 1001   => s_axis_tdata <= x"07060504"; s_axis_tkeep <= x"F"; s_axis_tvalid <= '1'; s_axis_tlast <= '1';
                 when others => s_axis_tdata <= s_axis_tdata; s_axis_tkeep <= s_axis_tkeep; s_axis_tvalid <= '0'; s_axis_tlast <= s_axis_tlast; 
             end case;   
         end if;
     end process;
-
-
-
 
 
     --i2c_master_inst : i2c_master
@@ -388,3 +456,6 @@ begin
 
 
 end Behavioral;
+
+
+
