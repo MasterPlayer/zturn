@@ -8,11 +8,9 @@ module axis_iic_mgr #(
 ) (
     input  logic                     clk              ,
     input  logic                     resetn           ,
-    
     input  logic [             15:0] s_axis_cmd_tdata , // user presented as [15:8] - size in bytes, [7:1] - address, [0] - operation(read/!write)
     input  logic                     s_axis_cmd_tvalid,
     output logic                     s_axis_cmd_tready,
-
     input  logic [((N_BYTES*8)-1):0] s_axis_tdata     ,
     input  logic [      N_BYTES-1:0] s_axis_tkeep     ,
     input  logic                     s_axis_tvalid    ,
@@ -630,9 +628,6 @@ module axis_iic_mgr #(
         else
             if (i2c_clk_assertion)
                 case (current_state)
-
-                    
-
                     READ_ST : 
                         if (bit_cnt == 0)
                             out_din_keep <= {out_din_keep[N_BYTES-2:0], 1'b1};
