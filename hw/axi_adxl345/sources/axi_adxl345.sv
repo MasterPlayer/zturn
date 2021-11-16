@@ -79,7 +79,9 @@ module axi_adxl345 #(
     localparam integer ADDR_LSB = 2;
     localparam integer ADDR_OPT = 3;
 
-    logic [15:0][3:0][7:0] register;
+    logic [15:0][3:0][7:0] register = '{default:'{default:'{default:0}}};
+
+    logic aw_en = 1'b1;
 
 
     /**/
@@ -214,19 +216,23 @@ module axi_adxl345 #(
 /*********************************** REGISTER ASSIGNMENT PART **********************************/
     generate
        
-        for (genvar index = 0; index < 4; index++) begin : GEN_OFFT
-            always_ff @(posedge aclk) begin : reg_0_processing
-                if (!aresetn) 
-                    register[0] <= '{default:0};
-                else
-                    if (awvalid & awready & wvalid & wready)
-                        if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == 'h00) begin
-                            if (wstrb[index])
-                                register[0][index][7:0] <= wdata_signal[index][7:0];
-                        end 
+        for (genvar reg_index = 0; reg_index < 16; reg_index++) begin : GEN_OFFT
+
+            for (genvar offt_index = 0; offt_index < 4; offt_index++) begin : GEN_OFFT
+
+                always_ff @(posedge aclk) begin : reg_processing
+                    if (!aresetn) 
+                        register[reg_index] <= '{default:0};
+                    else
+                        if (awvalid & awready & wvalid & wready)
+                            if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == reg_index) begin
+                                if (wstrb[offt_index])
+                                    register[reg_index][offt_index][7:0] <= wdata_signal[offt_index][7:0];
+                            end 
+                end 
+
             end 
         end 
-    
     endgenerate
 
 /*************************************** FUNCTIONAL PART ***************************************/
