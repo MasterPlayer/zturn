@@ -1,242 +1,389 @@
-// 0x00   0  DEVID          R    11100101  Device ID 
-// 0x1D  29  THRESH_TAP     R/W  00000000  Tap threshold 
-// 0x1E  30  OFSX           R/W  00000000  X-axis offset 
-// 0x1F  31  OFSY           R/W  00000000  Y-axis offset 
-// 0x20  32  OFSZ           R/W  00000000  Z-axis offset 
-// 0x21  33  DUR            R/W  00000000  Tap duration 
-// 0x22  34  LATENT         R/W  00000000  Tap latency 
-// 0x23  35  WINDOW         R/W  00000000  Tap window 
-// 0x24  36  THRESH_ACT     R/W  00000000  Activity threshold 
-// 0x25  37  THRESH_INACT   R/W  00000000  Inactivity threshold 
-// 0x26  38  TIME_INACT     R/W  00000000  Inactivity time 
-// 0x27  39  ACT_INACT_CTL  R/W  00000000  Axis enable control for activity and inactivity detection 
-// 0x28  40  THRESH_FF      R/W  00000000  Free-fall threshold 
-// 0x29  41  TIME_FF        R/W  00000000  Free-fall time 
-// 0x2A  42  TAP_AXES       R/W  00000000  Axis control for single tap/double tap 
-// 0x2B  43  ACT_TAP_STATUS R    00000000  Source of single tap/double tap 
-// 0x2C  44  BW_RATE        R/W  00001010  Data rate and power mode control 
-// 0x2D  45  POWER_CTL      R/W  00000000  Power-saving features control 
-// 0x2E  46  INT_ENABLE     R/W  00000000  Interrupt enable control 
-// 0x2F  47  INT_MAP        R/W  00000000  Interrupt mapping control 
-// 0x30  48  INT_SOURCE     R    00000010  Source of interrupts 
-// 0x31  49  DATA_FORMAT    R/W  00000000  Data format control 
-// 0x32  50  DATAX0         R    00000000  X-Axis Data 0 
-// 0x33  51  DATAX1         R    00000000  X-Axis Data 1 
-// 0x34  52  DATAY0         R    00000000  Y-Axis Data 0 
-// 0x35  53  DATAY1         R    00000000  Y-Axis Data 1 
-// 0x36  54  DATAZ0         R    00000000  Z-Axis Data 0 
-// 0x37  55  DATAZ1         R    00000000  Z-Axis Data 1 
-// 0x38  56  FIFO_CTL       R/W  00000000  FIFO control 
-// 0x39  57  FIFO_STATUS    R    00000000  FIFO status 
-// [31:24] [23:16] [15: 8] [ 7: 0]
-//    0x03    0x02    0x01    0x00 
-//    0x07    0x06    0x05    0x04 
-//    0x0B    0x0A    0x09    0x08 
-//    0x0F    0x0E    0x0D    0x0C 
-//    0x13    0x12    0x11    0x10 
-//    0x17    0x16    0x15    0x14 
-//    0x1B    0x1A    0x19    0x18 
-//    0x1F    0x1E    0x1D    0x1C 
-//    0x23    0x22    0x21    0x20 
-//    0x27    0x26    0x25    0x24 
-//    0x2B    0x2A    0x29    0x28 
-//    0x2F    0x2E    0x2D    0x2C 
-//    0x33    0x32    0x31    0x30 
-//    0x37    0x36    0x35    0x34 
-//    0x3B    0x3A    0x39    0x38 
-//    0x3F    0x3E    0x3D    0x3C 
-
 `timescale 1 ns / 1 ps
 
+
+
 module axi_adxl345 #(
-    parameter DEFAULT_REQUEST_INTERVAL = 10000,
-    parameter DEFAULT_BW_RATE          = 10   ,
-    parameter DEFAULT_I2C_ADDRESS      = 8'hA6 
+    parameter integer C_S_AXI_LITE_DATA_WIDTH = 32,
+    parameter integer C_S_AXI_LITE_ADDR_WIDTH = 6
 ) (
-    input                            aclk         ,
-    input                            aresetn      ,
-    input        [              5:0] awaddr       ,
-    input        [              2:0] awprot       ,
-    input                            awvalid      ,
-    output logic                     awready      ,
-    input        [             31:0] wdata        ,
-    input        [              3:0] wstrb        ,
-    input                            wvalid       ,
-    output logic                     wready       ,
-    output logic [              1:0] bresp        ,
-    output logic                     bvalid       ,
-    input                            bready       ,
-    input        [              5:0] araddr       ,
-    input        [              2:0] arprot       ,
-    input                            arvalid      ,
-    output logic                     arready      ,
-    output logic [             31:0] rdata        ,
-    output logic [              1:0] rresp        ,
-    output logic                     rvalid       ,
-    input                            rready        
+    input  logic                                   S_AXI_LITE_ACLK,
+    input  logic                                   S_AXI_LITE_ARESETN  ,
+    input  logic [    C_S_AXI_LITE_ADDR_WIDTH-1:0] S_AXI_LITE_AWADDR   ,
+    input  logic [                            2:0] S_AXI_LITE_AWPROT   ,
+    input  logic                                   S_AXI_LITE_AWVALID  ,
+    output logic                                   S_AXI_LITE_AWREADY  ,
+    input  logic [    C_S_AXI_LITE_DATA_WIDTH-1:0] S_AXI_LITE_WDATA    ,
+    input  logic [(C_S_AXI_LITE_DATA_WIDTH/8)-1:0] S_AXI_LITE_WSTRB    ,
+    input  logic                                   S_AXI_LITE_WVALID   ,
+    output logic                                   S_AXI_LITE_WREADY   ,
+    output logic [                            1:0] S_AXI_LITE_BRESP    ,
+    output logic                                   S_AXI_LITE_BVALID   ,
+    input  logic                                   S_AXI_LITE_BREADY   ,
+    input  logic [    C_S_AXI_LITE_ADDR_WIDTH-1:0] S_AXI_LITE_ARADDR   ,
+    input  logic [                            2:0] S_AXI_LITE_ARPROT   ,
+    input  logic                                   S_AXI_LITE_ARVALID  ,
+    output logic                                   S_AXI_LITE_ARREADY  ,
+    output logic [    C_S_AXI_LITE_DATA_WIDTH-1:0] S_AXI_LITE_RDATA    ,
+    output logic [                            1:0] S_AXI_LITE_RRESP    ,
+    output logic                                   S_AXI_LITE_RVALID   ,
+    input  logic                                   S_AXI_LITE_RREADY
 );
 
-    localparam integer ADDR_LSB = 2;
-    localparam integer ADDR_OPT = 3;
+    logic [C_S_AXI_LITE_ADDR_WIDTH-1:0] axi_awaddr ;
+    logic                               axi_awready;
+    logic                               axi_wready ;
+    logic [                        1:0] axi_bresp  ;
+    logic                               axi_bvalid ;
+    logic [C_S_AXI_LITE_ADDR_WIDTH-1:0] axi_araddr ;
+    logic                               axi_arready;
+    logic [C_S_AXI_LITE_DATA_WIDTH-1:0] axi_rdata  ;
+    logic [                        1:0] axi_rresp  ;
+    logic                               axi_rvalid ;
 
-    logic [15:0][3:0][7:0] register = '{default:'{default:'{default:0}}};
 
-    logic aw_en = 1'b1;
+    localparam integer ADDR_LSB = (C_S_AXI_LITE_DATA_WIDTH/32) + 1;
+    localparam integer OPT_MEM_ADDR_BITS = 3;
 
 
-    /**/
-    always_ff @(posedge aclk) begin : aw_en_processing 
-        if (!aresetn) 
-            aw_en <= 1'b1;
-        else
-            if (!awready & awvalid & wvalid & aw_en)
-                aw_en <= 1'b0;
-            else
-                if (bready & bvalid)
-                    aw_en <= 1'b1;
+    logic [0:15][C_S_AXI_LITE_DATA_WIDTH-1:0] register = '{default:'{default:0}}   ;
+    logic [0:15][3:0] need_update_reg = '{
+        '{0, 0, 0, 0}, // 0x00
+        '{0, 0, 0, 0}, // 0x04
+        '{0, 0, 0, 0}, // 0x08
+        '{0, 0, 0, 0}, // 0x0C
+        '{0, 0, 0, 0}, // 0x10
+        '{0, 0, 0, 0}, // 0x14
+        '{0, 0, 0, 0}, // 0x18
+        '{0, 0, 0, 0}, // 0x1C
+        '{0, 0, 0, 0}, // 0x20
+        '{0, 0, 0, 0}, // 0x24
+        '{0, 0, 0, 0}, // 0x28
+        '{0, 0, 0, 0}, // 0x2C
+        '{0, 0, 0, 0}, // 0x30
+        '{0, 0, 0, 0}, // 0x34
+        '{0, 0, 0, 0}, // 0x38
+        '{0, 0, 0, 0}  // 0x3C
+        };
+
+    logic [0:15][3:0] write_mask_register = '{
+        '{0, 0, 0, 0}, // 0x00
+        '{0, 0, 0, 0}, // 0x04
+        '{0, 0, 0, 0}, // 0x08
+        '{0, 0, 0, 0}, // 0x0C
+        '{0, 0, 0, 0}, // 0x10
+        '{0, 0, 0, 0}, // 0x14
+        '{0, 0, 0, 0}, // 0x18
+        '{1, 1, 1, 0}, // 0x1C
+        '{1, 1, 1, 1}, // 0x20
+        '{1, 1, 1, 1}, // 0x24
+        '{0, 1, 1, 1}, // 0x28
+        '{1, 1, 1, 1}, // 0x2C
+        '{0, 0, 1, 0}, // 0x30
+        '{0, 0, 0, 0}, // 0x34
+        '{0, 0, 0, 1}, // 0x38
+        '{0, 0, 0, 0}  // 0x3C
+        };
+
+
+    logic                               slv_reg_rden;
+    logic                               slv_reg_wren;
+    logic [C_S_AXI_LITE_DATA_WIDTH-1:0] reg_data_out;
+    logic                               aw_en       ;
+
+    integer byte_index;
+
+    logic update_request = 1'b0;
+
+    typedef enum {
+        IDLE_ST,
+        GET_UPD_ADDR_ST,
+        WRITE_ST
+    } fsm;
+
+    fsm current_state = IDLE_ST;
+    logic [3:0][1:0] address = '{default:0};
+
+    always_comb begin
+        S_AXI_LITE_AWREADY = axi_awready;
+        S_AXI_LITE_WREADY  = axi_wready;
+        S_AXI_LITE_BRESP   = axi_bresp;
+        S_AXI_LITE_BVALID  = axi_bvalid;
+        S_AXI_LITE_ARREADY = axi_arready;
+        S_AXI_LITE_RDATA   = axi_rdata;
+        S_AXI_LITE_RRESP   = axi_rresp;
+        S_AXI_LITE_RVALID  = axi_rvalid;
     end 
 
-    /**/
-    always_ff @(posedge aclk) begin : awready_processing 
-        if (!aresetn)
-            awready <= 1'b0;
-        else
-            if (!awready & awvalid & wvalid & aw_en)
-                awready <= 1'b1;
-            else 
-                awready <= 1'b0;
-    end 
+    always_ff @(posedge S_AXI_LITE_ACLK) begin : current_state_proc 
+        if (~S_AXI_LITE_ARESETN) 
+            current_state <= IDLE_ST;
+        else 
+            case (current_state)
 
-    always_ff @(posedge aclk) begin : wready_processing 
-        if (!aresetn)
-            wready <= 1'b0;
-        else
-            if (!wready & wvalid & awvalid & aw_en)
-                wready <= 1'b1;
-            else
-                wready <= 1'b0;
+                IDLE_ST : 
+                    if (update_request)
+                        current_state <= GET_UPD_ADDR_ST;
+                    else 
+                        current_state <= current_state;
 
-    end 
+                GET_UPD_ADDR_ST : 
+                    if (need_update_reg[address[3:0]][address[1:0]])
+                        current_state <= WRITE_ST;
+                    else 
+                        current_state <= current_state;
 
-    always_ff @(posedge aclk) begin : bvalid_processing
-        if (!aresetn)
-            bvalid <= 1'b0;
-        else
-            // if (awvalid & awready & wvalid & wready & ~bvalid)
-            if (wvalid & wready & awvalid & awready & ~bvalid)
-                bvalid <= 1'b1;
-            else
-                if (bvalid & bready)
-                    bvalid <= 1'b0;
-    end 
+                WRITE_ST : 
+                    current_state <= GET_UPD_ADDR_ST;
 
-    always_ff @(posedge aclk) begin : arready_processing 
-        if (!aresetn)
-            arready <= 1'b0;
-        else
-            if (!arready & arvalid)
-                arready <= 1'b1;
-            else
-                arready <= 1'b0;
+                default : 
+                    current_state <= current_state;
+
+            endcase // current_state
+
     end
 
-    always_ff @(posedge aclk) begin : rvalid_processing
-        if (!aresetn)
-            rvalid <= 1'b0;
-        else
-            if (arvalid & arready & ~rvalid)
-                rvalid <= 1'b1;
-            else 
-                if (rvalid & rready)
-                    rvalid <= 1'b0;
 
+
+    always_ff @(posedge S_AXI_LITE_ACLK) begin : address_proc 
+        if (~S_AXI_LITE_ARESETN) 
+            address  <= '{default:0};
+        else 
+            case (current_state)
+                WRITE_ST : 
+                    address <= address;
+
+                GET_UPD_ADDR_ST : 
+                    address <= address + 1;
+
+                default : 
+                    address <= '{default:0};
+
+            endcase // current_state
     end 
 
-    always_ff @(posedge aclk) begin : rdata_processing 
-        if (!aresetn)
-            rdata <= '{default:0};
-        else
-            if (arvalid & arready & ~rvalid)
-                case (araddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB]) 
-                    'h00 : rdata <= register[0];
-                    'h01 : rdata <= register[1];
-                    'h02 : rdata <= register[2];
-                    'h03 : rdata <= register[3];
-                    'h04 : rdata <= register[4];
-                    'h05 : rdata <= register[5];
-                    'h06 : rdata <= register[6];
-                    'h07 : rdata <= register[7];
-                    'h08 : rdata <= register[8];
-                    'h09 : rdata <= register[9];
-                    'h0A : rdata <= register[10];
-                    'h0B : rdata <= register[11];
-                    default : rdata <= rdata;
-                endcase // araddr
-    end 
 
-    always_ff @(posedge aclk) begin : rresp_processing 
-        if (!aresetn) 
-            rresp <= '{default:0};
-        else
-            if (arvalid & arready & ~rvalid)
-                case (araddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB])
-                    'h00 : rresp <= '{default:0};
-                    'h01 : rresp <= '{default:0};
-                    'h02 : rresp <= '{default:0};
-                    'h03 : rresp <= '{default:0};
-                    'h04 : rresp <= '{default:0};
-                    'h05 : rresp <= '{default:0};
-                    'h06 : rresp <= '{default:0};
-                    'h07 : rresp <= '{default:0};
-                    'h08 : rresp <= '{default:0};
-                    'h09 : rresp <= '{default:0};
-                    'h0A : rresp <= '{default:0};
-                    'h0B : rresp <= '{default:0};
-                    default : rresp <= 'b10;
-                endcase; // araddr
-    end                     
 
-    always_ff @(posedge aclk) begin : bresp_processing
-        if (!aresetn)
-            bresp <= '{default:0};
-        else
-            if (awvalid & awready & wvalid & wready & ~bvalid)
-                if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] >= 0 | awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] <= 63 )
-                    bresp <= '{default:0};
+    generate 
+
+        for (genvar reg_index = 0; reg_index < 15; reg_index++) begin 
+    
+            always @(posedge S_AXI_LITE_ACLK) begin : register_proc
+                if (~S_AXI_LITE_ARESETN)
+                    update_request <= 1'b0;
                 else
-                    bresp <= 'b10;
-    end
-
-    logic [3:0][7:0] wdata_signal;
-
-    always_comb begin 
-        wdata_signal <= wdata;
-    end 
-
-/*********************************** REGISTER ASSIGNMENT PART **********************************/
-    generate
-       
-        for (genvar reg_index = 0; reg_index < 16; reg_index++) begin : GEN_OFFT
-
-            for (genvar offt_index = 0; offt_index < 4; offt_index++) begin : GEN_OFFT
-
-                always_ff @(posedge aclk) begin : reg_processing
-                    if (!aresetn) 
-                        register[reg_index] <= '{default:0};
-                    else
-                        if (awvalid & awready & wvalid & wready)
-                            if (awaddr[(ADDR_OPT + ADDR_LSB) : ADDR_LSB] == reg_index) begin
-                                if (wstrb[offt_index])
-                                    register[reg_index][offt_index][7:0] <= wdata_signal[offt_index][7:0];
+                    if (slv_reg_wren) begin 
+                        if (axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == reg_index) begin 
+                            for ( byte_index = 0; byte_index <= (C_S_AXI_LITE_DATA_WIDTH/8)-1; byte_index = byte_index + 1 ) begin 
+                                if ( S_AXI_LITE_WSTRB[byte_index] == 1 & write_mask_register[reg_index][byte_index]) begin 
+                                    update_request <= 1'b1;
+                                end 
                             end 
-                end 
+                        end
+                    end else begin  
+                        if (current_state == GET_UPD_ADDR_ST) 
+                            update_request <= 1'b0;
+                        end 
+                    end 
 
-            end 
-        end 
+            end    
+
     endgenerate
 
-/*************************************** FUNCTIONAL PART ***************************************/
 
 
+
+    always @( posedge S_AXI_LITE_ACLK ) begin : axi_awready_proc
+        if (~S_AXI_LITE_ARESETN)
+            axi_awready <= 1'b0;
+        else    
+            if (~axi_awready && S_AXI_LITE_AWVALID && S_AXI_LITE_WVALID && aw_en)
+                axi_awready <= 1'b1;
+            else 
+                if (S_AXI_LITE_BREADY && axi_bvalid)
+                    axi_awready <= 1'b0;
+                else
+                    axi_awready <= 1'b0;
+    end       
+
+
+    always @( posedge S_AXI_LITE_ACLK ) begin : aw_en_proc
+        if (~S_AXI_LITE_ARESETN)
+            aw_en <= 1'b1;
+        else
+            if (~axi_awready && S_AXI_LITE_AWVALID && S_AXI_LITE_WVALID && aw_en)
+                aw_en <= 1'b0;
+            else 
+                if (S_AXI_LITE_BREADY && axi_bvalid)
+                    aw_en <= 1'b1;
+    end       
+
+
+
+    always @( posedge S_AXI_LITE_ACLK ) begin : axi_awaddr_proc
+        if (~S_AXI_LITE_ARESETN)
+            axi_awaddr <= 0;
+        else
+            if (~axi_awready && S_AXI_LITE_AWVALID && S_AXI_LITE_WVALID && aw_en)
+                axi_awaddr <= S_AXI_LITE_AWADDR;
+    end       
+
+
+
+    always @( posedge S_AXI_LITE_ACLK ) begin : axi_wready_proc
+        if (~S_AXI_LITE_ARESETN)
+            axi_wready <= 1'b0;
+        else    
+            if (~axi_wready && S_AXI_LITE_WVALID && S_AXI_LITE_AWVALID && aw_en )
+                axi_wready <= 1'b1;
+            else
+                axi_wready <= 1'b0;
+    end       
+
+    
+
+    always_comb begin 
+        slv_reg_wren = axi_wready && S_AXI_LITE_WVALID && axi_awready && S_AXI_LITE_AWVALID;
+    end
+
+
+    generate 
+
+        for (genvar reg_index = 0; reg_index < 15; reg_index++) begin 
+    
+            always @(posedge S_AXI_LITE_ACLK) begin : register_proc
+                if (~S_AXI_LITE_ARESETN)
+                    register[reg_index] <= 0;
+                else
+                    if (slv_reg_wren)
+                        if (axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == reg_index)
+                            for ( byte_index = 0; byte_index <= (C_S_AXI_LITE_DATA_WIDTH/8)-1; byte_index = byte_index + 1 )
+                                if ( S_AXI_LITE_WSTRB[byte_index] == 1 & write_mask_register[reg_index][byte_index])
+                                    register[reg_index][(byte_index*8) +: 8] <= S_AXI_LITE_WDATA[(byte_index*8) +: 8];
+            end    
+
+            always @(posedge S_AXI_LITE_ACLK) begin : need_update_reg_proc 
+                if (~S_AXI_LITE_ARESETN)
+                    register[reg_index] <= 0;
+                else
+                    if (slv_reg_wren)
+                        if (axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == reg_index)
+                            for (byte_index = 0; byte_index <= (C_S_AXI_LITE_DATA_WIDTH/8)-1; byte_index = byte_index + 1)
+                                if (S_AXI_LITE_WSTRB[byte_index])
+                                    need_update_reg[reg_index][byte_index] <= write_mask_register[reg_index][byte_index];
+            end    
+
+
+        end 
+
+
+    endgenerate
+
+
+
+    always @( posedge S_AXI_LITE_ACLK ) begin : axi_bvalid_proc
+        if (~S_AXI_LITE_ARESETN)
+            axi_bvalid  <= 0;
+        else
+            if (axi_awready && S_AXI_LITE_AWVALID && ~axi_bvalid && axi_wready && S_AXI_LITE_WVALID)
+                axi_bvalid <= 1'b1;
+            else
+                if (S_AXI_LITE_BREADY && axi_bvalid)
+                    axi_bvalid <= 1'b0; 
+    end   
+
+
+
+    always @( posedge S_AXI_LITE_ACLK ) begin : axi_bresp_proc
+        if (~S_AXI_LITE_ARESETN)
+            axi_bresp   <= 2'b0;
+        else
+            if (axi_awready && S_AXI_LITE_AWVALID && ~axi_bvalid && axi_wready && S_AXI_LITE_WVALID)
+                axi_bresp  <= 2'b0; // 'OKAY' response 
+    end   
+
+
+///////////////////////////////////////////// READ INTERFACE SIGNALS /////////////////////////////////////////////
+
+
+    always @( posedge S_AXI_LITE_ACLK ) begin : axi_arready_proc
+        if (~S_AXI_LITE_ARESETN)
+            axi_arready <= 1'b0;
+        else    
+            if (~axi_arready && S_AXI_LITE_ARVALID)
+                axi_arready <= 1'b1;
+            else
+                axi_arready <= 1'b0;
+    end       
+
+
+    always @( posedge S_AXI_LITE_ACLK ) begin : axi_araddr_proc
+        if (~S_AXI_LITE_ARESETN)
+            axi_araddr  <= 32'b0;
+        else    
+            if (~axi_arready && S_AXI_LITE_ARVALID)
+                axi_araddr  <= S_AXI_LITE_ARADDR;
+            
+    end       
+
+
+
+    always @( posedge S_AXI_LITE_ACLK ) begin : axi_rvalid_proc
+        if (~S_AXI_LITE_ARESETN)
+            axi_rvalid <= 0;
+        else
+            if (axi_arready && S_AXI_LITE_ARVALID && ~axi_rvalid)
+                axi_rvalid <= 1'b1;
+            else 
+                if (axi_rvalid && S_AXI_LITE_RREADY)
+                    axi_rvalid <= 1'b0;
+    end    
+
+
+
+    always @( posedge S_AXI_LITE_ACLK ) begin : axi_rresp_proc
+        if (~S_AXI_LITE_ARESETN)
+            axi_rresp  <= 0;
+        else
+            if (axi_arready && S_AXI_LITE_ARVALID && ~axi_rvalid)
+                axi_rresp  <= 2'b0; // 'OKAY' response             
+        
+    end    
+
+
+    always_comb begin 
+        slv_reg_rden = axi_arready & S_AXI_LITE_ARVALID & ~axi_rvalid;
+    end 
+
+    always @(*) begin
+        case ( axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] )
+            4'h0   : reg_data_out <= register[0];
+            4'h1   : reg_data_out <= register[ 1];
+            4'h2   : reg_data_out <= register[ 2];
+            4'h3   : reg_data_out <= register[ 3];
+            4'h4   : reg_data_out <= register[ 4];
+            4'h5   : reg_data_out <= register[ 5];
+            4'h6   : reg_data_out <= register[ 6];
+            4'h7   : reg_data_out <= register[ 7];
+            4'h8   : reg_data_out <= register[ 8];
+            4'h9   : reg_data_out <= register[ 9];
+            4'hA   : reg_data_out <= register[10];
+            4'hB   : reg_data_out <= register[11];
+            4'hC   : reg_data_out <= register[12];
+            4'hD   : reg_data_out <= register[13];
+            4'hE   : reg_data_out <= register[14];
+            4'hF   : reg_data_out <= register[15];
+            default : reg_data_out <= 0;
+        endcase
+    end
+
+
+
+    always @( posedge S_AXI_LITE_ACLK ) begin
+        if (~S_AXI_LITE_ARESETN)
+            axi_rdata  <= 0;
+        else 
+            if (slv_reg_rden) 
+                axi_rdata <= reg_data_out;     // register read data
+    end    
 
 endmodule

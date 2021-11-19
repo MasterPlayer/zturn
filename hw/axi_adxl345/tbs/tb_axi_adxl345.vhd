@@ -223,7 +223,7 @@ architecture tb_axi_adxl345_arch of tb_axi_adxl345 is
     constant  C_S_AXI_LITE_ADDR_WIDTH :           integer := 6                                                  ;
 
 
-    component s_axi_lite_iface 
+    component axi_adxl345 
         generic (
             C_S_AXI_LITE_DATA_WIDTH :           integer := 32                                                   ;
             C_S_AXI_LITE_ADDR_WIDTH :           integer := 6
@@ -254,7 +254,7 @@ architecture tb_axi_adxl345_arch of tb_axi_adxl345 is
     end component;
 
 
-    signal  awaddr       :           std_logic_vector (     C_S_AXI_LITE_ADDR_WIDTH-1 downto 0 ) := (others => '0')  ;
+    signal  awaddr       :           std_logic_vector (     7 downto 0 ) := (others => '0')  ;
     signal  awprot       :           std_logic_vector (                             2 downto 0 ) := (others => '0')  ;
     signal  awvalid      :           std_logic                                                   := '0'              ;
     signal  awready      :           std_logic                                                                       ;
@@ -265,7 +265,7 @@ architecture tb_axi_adxl345_arch of tb_axi_adxl345 is
     signal  bresp        :           std_logic_vector (                             1 downto 0 )                     ;
     signal  bvalid       :           std_logic                                                                       ;
     signal  bready       :           std_logic                                                   := '0'              ;
-    signal  araddr       :           std_logic_vector (     C_S_AXI_LITE_ADDR_WIDTH-1 downto 0 ) := (others => '0')  ;
+    signal  araddr       :           std_logic_vector (     7 downto 0 ) := (others => '0')  ;
     signal  arprot       :           std_logic_vector (                             2 downto 0 ) := (others => '0')  ;
     signal  arvalid      :           std_logic                                                   := '0'              ;
     signal  arready      :           std_logic                                                                       ;
@@ -289,7 +289,7 @@ begin
 
     reset <= '1' when i < 5 else '0';
 
-    s_axi_lite_iface_inst : s_axi_lite_iface 
+    axi_adxl345_inst : axi_adxl345 
         generic map (
             C_S_AXI_LITE_DATA_WIDTH =>  C_S_AXI_LITE_DATA_WIDTH ,
             C_S_AXI_LITE_ADDR_WIDTH =>  C_S_AXI_LITE_ADDR_WIDTH  
@@ -297,7 +297,7 @@ begin
         port map (
             S_AXI_LITE_ACLK         =>  CLK                     ,
             S_AXI_LITE_ARESETN      =>  not(RESET)              ,
-            S_AXI_LITE_AWADDR       =>  awaddr                  ,
+            S_AXI_LITE_AWADDR       =>  awaddr( 5 downto 0 )    ,
             S_AXI_LITE_AWPROT       =>  awprot                  ,
             S_AXI_LITE_AWVALID      =>  awvalid                 ,
             S_AXI_LITE_AWREADY      =>  awready                 ,
@@ -308,7 +308,7 @@ begin
             S_AXI_LITE_BRESP        =>  bresp                   ,
             S_AXI_LITE_BVALID       =>  bvalid                  ,
             S_AXI_LITE_BREADY       =>  bready                  ,
-            S_AXI_LITE_ARADDR       =>  araddr                  ,
+            S_AXI_LITE_ARADDR       =>  araddr( 5 downto 0 )    ,
             S_AXI_LITE_ARPROT       =>  arprot                  ,
             S_AXI_LITE_ARVALID      =>  arvalid                 ,
             S_AXI_LITE_ARREADY      =>  arready                 ,
@@ -322,9 +322,69 @@ begin
     begin
         if CLK'event AND CLK = '1' then 
             case i is 
-                when 1000   => awaddr <= "000000"; awprot <= "000"; awvalid <= '1'; wdata <= x"83828180"; wstrb <= x"1"; wvalid <= '1'; bready <= '1';
-                when 1001   => awaddr <= "000000"; awprot <= "000"; awvalid <= '1'; wdata <= x"83828180"; wstrb <= x"1"; wvalid <= '1'; bready <= '1';
-                when 1002   => awaddr <= "000000"; awprot <= "000"; awvalid <= '0'; wdata <= x"83828180"; wstrb <= x"1"; wvalid <= '0'; bready <= '1';
+                when 1000   => awaddr <= x"00"; awprot <= "000"; awvalid <= '1'; wdata <= x"03020100"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1001   => awaddr <= x"00"; awprot <= "000"; awvalid <= '1'; wdata <= x"03020100"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1002   => awaddr <= x"00"; awprot <= "000"; awvalid <= '0'; wdata <= x"03020100"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1010   => awaddr <= x"04"; awprot <= "000"; awvalid <= '1'; wdata <= x"07060504"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1011   => awaddr <= x"04"; awprot <= "000"; awvalid <= '1'; wdata <= x"07060504"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1012   => awaddr <= x"04"; awprot <= "000"; awvalid <= '0'; wdata <= x"07060504"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1020   => awaddr <= x"08"; awprot <= "000"; awvalid <= '1'; wdata <= x"0b0a0908"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1021   => awaddr <= x"08"; awprot <= "000"; awvalid <= '1'; wdata <= x"0b0a0908"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1022   => awaddr <= x"08"; awprot <= "000"; awvalid <= '0'; wdata <= x"0b0a0908"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1030   => awaddr <= x"0C"; awprot <= "000"; awvalid <= '1'; wdata <= x"0f0e0d0c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1031   => awaddr <= x"0C"; awprot <= "000"; awvalid <= '1'; wdata <= x"0f0e0d0c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1032   => awaddr <= x"0C"; awprot <= "000"; awvalid <= '0'; wdata <= x"0f0e0d0c"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1040   => awaddr <= x"10"; awprot <= "000"; awvalid <= '1'; wdata <= x"13121110"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1041   => awaddr <= x"10"; awprot <= "000"; awvalid <= '1'; wdata <= x"13121110"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1042   => awaddr <= x"10"; awprot <= "000"; awvalid <= '0'; wdata <= x"13121110"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1050   => awaddr <= x"14"; awprot <= "000"; awvalid <= '1'; wdata <= x"17161514"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1051   => awaddr <= x"14"; awprot <= "000"; awvalid <= '1'; wdata <= x"17161514"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1052   => awaddr <= x"14"; awprot <= "000"; awvalid <= '0'; wdata <= x"17161514"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1060   => awaddr <= x"18"; awprot <= "000"; awvalid <= '1'; wdata <= x"1b1a1918"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1061   => awaddr <= x"18"; awprot <= "000"; awvalid <= '1'; wdata <= x"1b1a1918"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1062   => awaddr <= x"18"; awprot <= "000"; awvalid <= '0'; wdata <= x"1b1a1918"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1070   => awaddr <= x"1C"; awprot <= "000"; awvalid <= '1'; wdata <= x"1f1e1d1c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1071   => awaddr <= x"1C"; awprot <= "000"; awvalid <= '1'; wdata <= x"1f1e1d1c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1072   => awaddr <= x"1C"; awprot <= "000"; awvalid <= '0'; wdata <= x"1f1e1d1c"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1080   => awaddr <= x"20"; awprot <= "000"; awvalid <= '1'; wdata <= x"23222120"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1081   => awaddr <= x"20"; awprot <= "000"; awvalid <= '1'; wdata <= x"23222120"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1082   => awaddr <= x"20"; awprot <= "000"; awvalid <= '0'; wdata <= x"23222120"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1090   => awaddr <= x"24"; awprot <= "000"; awvalid <= '1'; wdata <= x"27262524"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1091   => awaddr <= x"24"; awprot <= "000"; awvalid <= '1'; wdata <= x"27262524"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1092   => awaddr <= x"24"; awprot <= "000"; awvalid <= '0'; wdata <= x"27262524"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1100   => awaddr <= x"28"; awprot <= "000"; awvalid <= '1'; wdata <= x"2b2a2928"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1101   => awaddr <= x"28"; awprot <= "000"; awvalid <= '1'; wdata <= x"2b2a2928"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1102   => awaddr <= x"28"; awprot <= "000"; awvalid <= '0'; wdata <= x"2b2a2928"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1110   => awaddr <= x"2C"; awprot <= "000"; awvalid <= '1'; wdata <= x"2f2e2d2c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1111   => awaddr <= x"2C"; awprot <= "000"; awvalid <= '1'; wdata <= x"2f2e2d2c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1112   => awaddr <= x"2C"; awprot <= "000"; awvalid <= '0'; wdata <= x"2f2e2d2c"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+                
+                when 1120   => awaddr <= x"30"; awprot <= "000"; awvalid <= '1'; wdata <= x"33323130"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1121   => awaddr <= x"30"; awprot <= "000"; awvalid <= '1'; wdata <= x"33323130"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1122   => awaddr <= x"30"; awprot <= "000"; awvalid <= '0'; wdata <= x"33323130"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+                
+                when 1130   => awaddr <= x"34"; awprot <= "000"; awvalid <= '1'; wdata <= x"37363534"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1131   => awaddr <= x"34"; awprot <= "000"; awvalid <= '1'; wdata <= x"37363534"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1132   => awaddr <= x"34"; awprot <= "000"; awvalid <= '0'; wdata <= x"37363534"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+                
+                when 1140   => awaddr <= x"38"; awprot <= "000"; awvalid <= '1'; wdata <= x"3b3a3938"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1141   => awaddr <= x"38"; awprot <= "000"; awvalid <= '1'; wdata <= x"3b3a3938"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1142   => awaddr <= x"38"; awprot <= "000"; awvalid <= '0'; wdata <= x"3b3a3938"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+                
+                when 1150   => awaddr <= x"3C"; awprot <= "000"; awvalid <= '1'; wdata <= x"3f3e3d3c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1151   => awaddr <= x"3C"; awprot <= "000"; awvalid <= '1'; wdata <= x"3f3e3d3c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1152   => awaddr <= x"3C"; awprot <= "000"; awvalid <= '0'; wdata <= x"3f3e3d3c"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
 
                 --when 1003   => awaddr <= "001000"; awprot <= "000"; awvalid <= '1'; wdata <= x"83828180"; wstrb <= x"8"; wvalid <= '1'; bready <= '1';
                 --when 1004   => awaddr <= "001000"; awprot <= "000"; awvalid <= '1'; wdata <= x"83828180"; wstrb <= x"8"; wvalid <= '1'; bready <= '1';
