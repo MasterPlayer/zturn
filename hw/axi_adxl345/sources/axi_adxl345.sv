@@ -63,7 +63,8 @@ module axi_adxl345 #(
     localparam integer USER_WIDTH = 8;
     localparam ADDRESS_LIMIT = 'h39;
 
-    logic [0:15][C_S_AXI_LITE_DATA_WIDTH-1:0] register = '{default:'{default:0}}   ;
+    // logic [0:15][C_S_AXI_LITE_DATA_WIDTH-1:0] register = '{default:'{default:0}}   ;
+    logic [0:15][(C_S_AXI_LITE_DATA_WIDTH/8)-1:0][7:0] register = '{default:'{default:'{default:0}}}   ;
     logic [0:15][3:0] need_update_reg = '{
         '{0, 0, 0, 0}, // 0x00
         '{0, 0, 0, 0}, // 0x04
@@ -123,7 +124,7 @@ module axi_adxl345 #(
 
     fsm         current_state      = IDLE_ST     ;
     logic [5:0] address            = '{default:0};
-    logic       write_cmd_word_cnt = 1'b0        ;
+    logic [1:0] write_cmd_word_cnt = '{default:0};
 
     logic [$clog2(REQUEST_INTERVAL)-1:0] request_timer = '{default:0};
 
@@ -211,7 +212,8 @@ module axi_adxl345 #(
                         if (axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == reg_index) begin 
                             for ( byte_index = 0; byte_index <= (C_S_AXI_LITE_DATA_WIDTH/8)-1; byte_index = byte_index + 1 ) begin 
                                 if ( S_AXI_LITE_WSTRB[byte_index] == 1 & write_mask_register[reg_index][byte_index]) begin 
-                                    register[reg_index][(byte_index*8) +: 8] <= S_AXI_LITE_WDATA[(byte_index*8) +: 8];
+                                    // register[reg_index][(byte_index*8) +: 8] <= S_AXI_LITE_WDATA[(byte_index*8) +: 8];
+                                    register[reg_index][byte_index] <= S_AXI_LITE_WDATA[(byte_index*8) +: 8];
                                 end 
                             end 
                         end 
@@ -222,7 +224,8 @@ module axi_adxl345 #(
                                     if (address[5:2] == reg_index)  
                                         for ( byte_index = 0; byte_index <= 3; byte_index = byte_index + 1 ) begin
                                             if (byte_index == address[1:0])
-                                                register[reg_index][(byte_index*8) +: 8] <= S_AXIS_TDATA;
+                                                // register[reg_index][(byte_index*8) +: 8] <= S_AXIS_TDATA;
+                                                register[reg_index][byte_index] <= S_AXIS_TDATA;
                                         end 
     
                             default: 
@@ -352,7 +355,7 @@ module axi_adxl345 #(
             case (current_state)
                 SEND_WRITE_CMD_ST : 
                     if (~out_awfull)
-                        write_cmd_word_cnt <= 1'b1;
+                        write_cmd_word_cnt <= write_cmd_word_cnt + 1;
 
                 default : 
                     write_cmd_word_cnt <= 1'b0;
@@ -382,7 +385,7 @@ module axi_adxl345 #(
 
                 SEND_WRITE_CMD_ST  : 
                     if (~out_awfull)
-                       if (write_cmd_word_cnt)
+                       if (write_cmd_word_cnt == 2'b10)
                             current_state <= INC_ADDR_ST;
 
                 INC_ADDR_ST  : 
@@ -434,7 +437,7 @@ module axi_adxl345 #(
 
         for (genvar reg_index = 0; reg_index < 15; reg_index++) begin 
     
-            always @(posedge S_AXI_LITE_ACLK) begin : register_proc
+            always @(posedge S_AXI_LITE_ACLK) begin : update_request_proc
                 if (~S_AXI_LITE_ARESETN)
                     update_request <= 1'b0;
                 else
@@ -493,10 +496,20 @@ module axi_adxl345 #(
     always_ff @(posedge S_AXI_LITE_ACLK) begin : out_din_data_proc
         case (current_state)
             SEND_WRITE_CMD_ST : 
-                if (~write_cmd_word_cnt)
-                    out_din_data <= 8'h01;
-                else 
-                    out_din_data <= {2'b00, address};
+                case(write_cmd_word_cnt)
+                    2'b00 : 
+                        out_din_data <= 8'h02;
+
+                    2'b01 : 
+                        out_din_data <= {2'b00, address};
+
+                    2'b10 : 
+                        out_din_data <= register[address[5:2]][address[1:0]];
+
+                    default : 
+                        out_din_data <= out_din_data;
+
+                endcase // write_cmd_word_cnt
 
             TX_READ_REQUEST_ST : 
                 out_din_data <= ADDRESS_LIMIT;
@@ -543,10 +556,14 @@ module axi_adxl345 #(
     always_ff @(posedge S_AXI_LITE_ACLK) begin 
         case (current_state)
             SEND_WRITE_CMD_ST : 
-                if (write_cmd_word_cnt)
-                    out_din_last <= 1'b1;
-                else 
-                    out_din_last <= 1'b0;
+                case (write_cmd_word_cnt) 
+                    2'b10 :
+                        out_din_last <= 1'b1;
+
+                    default: 
+                        out_din_last <= 1'b0;
+
+                endcase // write_cmd_word_cnt
 
             TX_READ_REQUEST_ST : 
                 out_din_last <= 1'b1;

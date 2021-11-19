@@ -368,151 +368,151 @@ begin
 
     M_AXIS_TREADY <= '1';
 
-    S_AXIS_PROCESSING : process(CLK)
-    begin
-        if CLK'event AND CLK = '1' then 
-            case i is 
-                when 1000   => S_AXIS_TDATA <= x"00"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1001   => S_AXIS_TDATA <= x"01"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1002   => S_AXIS_TDATA <= x"02"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1003   => S_AXIS_TDATA <= x"03"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1004   => S_AXIS_TDATA <= x"04"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1005   => S_AXIS_TDATA <= x"05"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1006   => S_AXIS_TDATA <= x"06"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1007   => S_AXIS_TDATA <= x"07"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1008   => S_AXIS_TDATA <= x"08"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1009   => S_AXIS_TDATA <= x"09"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1010   => S_AXIS_TDATA <= x"0a"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1011   => S_AXIS_TDATA <= x"0b"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1012   => S_AXIS_TDATA <= x"0c"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1013   => S_AXIS_TDATA <= x"0d"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1014   => S_AXIS_TDATA <= x"0e"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1015   => S_AXIS_TDATA <= x"0f"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1016   => S_AXIS_TDATA <= x"10"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1017   => S_AXIS_TDATA <= x"11"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1018   => S_AXIS_TDATA <= x"12"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1019   => S_AXIS_TDATA <= x"13"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1020   => S_AXIS_TDATA <= x"14"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1021   => S_AXIS_TDATA <= x"15"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1022   => S_AXIS_TDATA <= x"16"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1023   => S_AXIS_TDATA <= x"17"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1024   => S_AXIS_TDATA <= x"18"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1025   => S_AXIS_TDATA <= x"19"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1026   => S_AXIS_TDATA <= x"1a"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1027   => S_AXIS_TDATA <= x"1b"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1028   => S_AXIS_TDATA <= x"1c"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1029   => S_AXIS_TDATA <= x"1d"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1030   => S_AXIS_TDATA <= x"1e"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1031   => S_AXIS_TDATA <= x"1f"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1032   => S_AXIS_TDATA <= x"20"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1033   => S_AXIS_TDATA <= x"21"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1034   => S_AXIS_TDATA <= x"22"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1035   => S_AXIS_TDATA <= x"23"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1036   => S_AXIS_TDATA <= x"24"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1037   => S_AXIS_TDATA <= x"25"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1038   => S_AXIS_TDATA <= x"26"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1039   => S_AXIS_TDATA <= x"27"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1040   => S_AXIS_TDATA <= x"28"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1041   => S_AXIS_TDATA <= x"29"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1042   => S_AXIS_TDATA <= x"2a"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1043   => S_AXIS_TDATA <= x"2b"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1044   => S_AXIS_TDATA <= x"2c"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1045   => S_AXIS_TDATA <= x"2d"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1046   => S_AXIS_TDATA <= x"2e"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1047   => S_AXIS_TDATA <= x"2f"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1048   => S_AXIS_TDATA <= x"30"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1049   => S_AXIS_TDATA <= x"31"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1050   => S_AXIS_TDATA <= x"32"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1051   => S_AXIS_TDATA <= x"33"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1052   => S_AXIS_TDATA <= x"34"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1053   => S_AXIS_TDATA <= x"35"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1054   => S_AXIS_TDATA <= x"36"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1055   => S_AXIS_TDATA <= x"37"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1056   => S_AXIS_TDATA <= x"38"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
-                when 1057   => S_AXIS_TDATA <= x"39"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '1';
-                when others => S_AXIS_TDATA <= S_AXIS_TDATA; S_AXIS_TKEEP <= S_AXIS_TKEEP; S_AXIS_TUSER <= S_AXIS_TUSER; S_AXIS_TVALID <= '0'; S_AXIS_TLAST <= S_AXIS_TLAST;
-
-
-            end case;
-        end if;
-    end process;
-
-    --write_processing : process(CLK)
+    --S_AXIS_PROCESSING : process(CLK)
     --begin
     --    if CLK'event AND CLK = '1' then 
     --        case i is 
-    --            when 1000   => awaddr <= x"00"; awprot <= "000"; awvalid <= '1'; wdata <= x"03020100"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1001   => awaddr <= x"00"; awprot <= "000"; awvalid <= '1'; wdata <= x"03020100"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1002   => awaddr <= x"00"; awprot <= "000"; awvalid <= '0'; wdata <= x"03020100"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+    --            when 1000   => S_AXIS_TDATA <= x"00"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1001   => S_AXIS_TDATA <= x"01"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1002   => S_AXIS_TDATA <= x"02"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1003   => S_AXIS_TDATA <= x"03"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1004   => S_AXIS_TDATA <= x"04"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1005   => S_AXIS_TDATA <= x"05"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1006   => S_AXIS_TDATA <= x"06"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1007   => S_AXIS_TDATA <= x"07"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1008   => S_AXIS_TDATA <= x"08"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1009   => S_AXIS_TDATA <= x"09"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1010   => S_AXIS_TDATA <= x"0a"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1011   => S_AXIS_TDATA <= x"0b"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1012   => S_AXIS_TDATA <= x"0c"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1013   => S_AXIS_TDATA <= x"0d"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1014   => S_AXIS_TDATA <= x"0e"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1015   => S_AXIS_TDATA <= x"0f"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1016   => S_AXIS_TDATA <= x"10"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1017   => S_AXIS_TDATA <= x"11"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1018   => S_AXIS_TDATA <= x"12"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1019   => S_AXIS_TDATA <= x"13"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1020   => S_AXIS_TDATA <= x"14"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1021   => S_AXIS_TDATA <= x"15"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1022   => S_AXIS_TDATA <= x"16"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1023   => S_AXIS_TDATA <= x"17"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1024   => S_AXIS_TDATA <= x"18"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1025   => S_AXIS_TDATA <= x"19"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1026   => S_AXIS_TDATA <= x"1a"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1027   => S_AXIS_TDATA <= x"1b"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1028   => S_AXIS_TDATA <= x"1c"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1029   => S_AXIS_TDATA <= x"1d"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1030   => S_AXIS_TDATA <= x"1e"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1031   => S_AXIS_TDATA <= x"1f"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1032   => S_AXIS_TDATA <= x"20"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1033   => S_AXIS_TDATA <= x"21"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1034   => S_AXIS_TDATA <= x"22"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1035   => S_AXIS_TDATA <= x"23"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1036   => S_AXIS_TDATA <= x"24"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1037   => S_AXIS_TDATA <= x"25"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1038   => S_AXIS_TDATA <= x"26"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1039   => S_AXIS_TDATA <= x"27"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1040   => S_AXIS_TDATA <= x"28"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1041   => S_AXIS_TDATA <= x"29"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1042   => S_AXIS_TDATA <= x"2a"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1043   => S_AXIS_TDATA <= x"2b"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1044   => S_AXIS_TDATA <= x"2c"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1045   => S_AXIS_TDATA <= x"2d"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1046   => S_AXIS_TDATA <= x"2e"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1047   => S_AXIS_TDATA <= x"2f"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1048   => S_AXIS_TDATA <= x"30"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1049   => S_AXIS_TDATA <= x"31"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1050   => S_AXIS_TDATA <= x"32"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1051   => S_AXIS_TDATA <= x"33"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1052   => S_AXIS_TDATA <= x"34"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1053   => S_AXIS_TDATA <= x"35"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1054   => S_AXIS_TDATA <= x"36"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1055   => S_AXIS_TDATA <= x"37"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1056   => S_AXIS_TDATA <= x"38"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '0';
+    --            when 1057   => S_AXIS_TDATA <= x"39"; S_AXIS_TKEEP <= "1"; S_AXIS_TUSER <= x"A7"; S_AXIS_TVALID <= '1'; S_AXIS_TLAST <= '1';
+    --            when others => S_AXIS_TDATA <= S_AXIS_TDATA; S_AXIS_TKEEP <= S_AXIS_TKEEP; S_AXIS_TUSER <= S_AXIS_TUSER; S_AXIS_TVALID <= '0'; S_AXIS_TLAST <= S_AXIS_TLAST;
 
-    --            when 1010   => awaddr <= x"04"; awprot <= "000"; awvalid <= '1'; wdata <= x"07060504"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1011   => awaddr <= x"04"; awprot <= "000"; awvalid <= '1'; wdata <= x"07060504"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1012   => awaddr <= x"04"; awprot <= "000"; awvalid <= '0'; wdata <= x"07060504"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
 
-    --            when 1020   => awaddr <= x"08"; awprot <= "000"; awvalid <= '1'; wdata <= x"0b0a0908"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1021   => awaddr <= x"08"; awprot <= "000"; awvalid <= '1'; wdata <= x"0b0a0908"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1022   => awaddr <= x"08"; awprot <= "000"; awvalid <= '0'; wdata <= x"0b0a0908"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
-
-    --            when 1030   => awaddr <= x"0C"; awprot <= "000"; awvalid <= '1'; wdata <= x"0f0e0d0c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1031   => awaddr <= x"0C"; awprot <= "000"; awvalid <= '1'; wdata <= x"0f0e0d0c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1032   => awaddr <= x"0C"; awprot <= "000"; awvalid <= '0'; wdata <= x"0f0e0d0c"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
-
-    --            when 1040   => awaddr <= x"10"; awprot <= "000"; awvalid <= '1'; wdata <= x"13121110"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1041   => awaddr <= x"10"; awprot <= "000"; awvalid <= '1'; wdata <= x"13121110"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1042   => awaddr <= x"10"; awprot <= "000"; awvalid <= '0'; wdata <= x"13121110"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
-
-    --            when 1050   => awaddr <= x"14"; awprot <= "000"; awvalid <= '1'; wdata <= x"17161514"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1051   => awaddr <= x"14"; awprot <= "000"; awvalid <= '1'; wdata <= x"17161514"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1052   => awaddr <= x"14"; awprot <= "000"; awvalid <= '0'; wdata <= x"17161514"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
-
-    --            when 1060   => awaddr <= x"18"; awprot <= "000"; awvalid <= '1'; wdata <= x"1b1a1918"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1061   => awaddr <= x"18"; awprot <= "000"; awvalid <= '1'; wdata <= x"1b1a1918"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1062   => awaddr <= x"18"; awprot <= "000"; awvalid <= '0'; wdata <= x"1b1a1918"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
-
-    --            when 1070   => awaddr <= x"1C"; awprot <= "000"; awvalid <= '1'; wdata <= x"1f1e1d1c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1071   => awaddr <= x"1C"; awprot <= "000"; awvalid <= '1'; wdata <= x"1f1e1d1c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1072   => awaddr <= x"1C"; awprot <= "000"; awvalid <= '0'; wdata <= x"1f1e1d1c"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
-
-    --            when 1080   => awaddr <= x"20"; awprot <= "000"; awvalid <= '1'; wdata <= x"23222120"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1081   => awaddr <= x"20"; awprot <= "000"; awvalid <= '1'; wdata <= x"23222120"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1082   => awaddr <= x"20"; awprot <= "000"; awvalid <= '0'; wdata <= x"23222120"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
-
-    --            when 1090   => awaddr <= x"24"; awprot <= "000"; awvalid <= '1'; wdata <= x"27262524"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1091   => awaddr <= x"24"; awprot <= "000"; awvalid <= '1'; wdata <= x"27262524"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1092   => awaddr <= x"24"; awprot <= "000"; awvalid <= '0'; wdata <= x"27262524"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
-
-    --            when 1100   => awaddr <= x"28"; awprot <= "000"; awvalid <= '1'; wdata <= x"2b2a2928"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1101   => awaddr <= x"28"; awprot <= "000"; awvalid <= '1'; wdata <= x"2b2a2928"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1102   => awaddr <= x"28"; awprot <= "000"; awvalid <= '0'; wdata <= x"2b2a2928"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
-
-    --            when 1110   => awaddr <= x"2C"; awprot <= "000"; awvalid <= '1'; wdata <= x"2f2e2d2c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1111   => awaddr <= x"2C"; awprot <= "000"; awvalid <= '1'; wdata <= x"2f2e2d2c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1112   => awaddr <= x"2C"; awprot <= "000"; awvalid <= '0'; wdata <= x"2f2e2d2c"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
-                
-    --            when 1120   => awaddr <= x"30"; awprot <= "000"; awvalid <= '1'; wdata <= x"33323130"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1121   => awaddr <= x"30"; awprot <= "000"; awvalid <= '1'; wdata <= x"33323130"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1122   => awaddr <= x"30"; awprot <= "000"; awvalid <= '0'; wdata <= x"33323130"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
-                
-    --            when 1130   => awaddr <= x"34"; awprot <= "000"; awvalid <= '1'; wdata <= x"37363534"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1131   => awaddr <= x"34"; awprot <= "000"; awvalid <= '1'; wdata <= x"37363534"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1132   => awaddr <= x"34"; awprot <= "000"; awvalid <= '0'; wdata <= x"37363534"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
-                
-    --            when 1140   => awaddr <= x"38"; awprot <= "000"; awvalid <= '1'; wdata <= x"3b3a3938"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1141   => awaddr <= x"38"; awprot <= "000"; awvalid <= '1'; wdata <= x"3b3a3938"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1142   => awaddr <= x"38"; awprot <= "000"; awvalid <= '0'; wdata <= x"3b3a3938"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
-                
-    --            when 1150   => awaddr <= x"3C"; awprot <= "000"; awvalid <= '1'; wdata <= x"3f3e3d3c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1151   => awaddr <= x"3C"; awprot <= "000"; awvalid <= '1'; wdata <= x"3f3e3d3c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
-    --            when 1152   => awaddr <= x"3C"; awprot <= "000"; awvalid <= '0'; wdata <= x"3f3e3d3c"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
-
-    --            --when 1003   => awaddr <= "001000"; awprot <= "000"; awvalid <= '1'; wdata <= x"83828180"; wstrb <= x"8"; wvalid <= '1'; bready <= '1';
-    --            --when 1004   => awaddr <= "001000"; awprot <= "000"; awvalid <= '1'; wdata <= x"83828180"; wstrb <= x"8"; wvalid <= '1'; bready <= '1';
-    --            --when 1005   => awaddr <= "001000"; awprot <= "000"; awvalid <= '0'; wdata <= x"83828180"; wstrb <= x"8"; wvalid <= '0'; bready <= '1';
-
-    --            when others => awaddr <= awaddr; awprot <= awprot; awvalid <= '0'; wdata <= wdata; wstrb <= wstrb; wvalid <= '0'; bready <= '0';
     --        end case;
     --    end if;
     --end process;
+
+    write_processing : process(CLK)
+    begin
+        if CLK'event AND CLK = '1' then 
+            case i is 
+                when 1000   => awaddr <= x"00"; awprot <= "000"; awvalid <= '1'; wdata <= x"03020100"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1001   => awaddr <= x"00"; awprot <= "000"; awvalid <= '1'; wdata <= x"03020100"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1002   => awaddr <= x"00"; awprot <= "000"; awvalid <= '0'; wdata <= x"03020100"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1010   => awaddr <= x"04"; awprot <= "000"; awvalid <= '1'; wdata <= x"07060504"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1011   => awaddr <= x"04"; awprot <= "000"; awvalid <= '1'; wdata <= x"07060504"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1012   => awaddr <= x"04"; awprot <= "000"; awvalid <= '0'; wdata <= x"07060504"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1020   => awaddr <= x"08"; awprot <= "000"; awvalid <= '1'; wdata <= x"0b0a0908"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1021   => awaddr <= x"08"; awprot <= "000"; awvalid <= '1'; wdata <= x"0b0a0908"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1022   => awaddr <= x"08"; awprot <= "000"; awvalid <= '0'; wdata <= x"0b0a0908"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1030   => awaddr <= x"0C"; awprot <= "000"; awvalid <= '1'; wdata <= x"0f0e0d0c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1031   => awaddr <= x"0C"; awprot <= "000"; awvalid <= '1'; wdata <= x"0f0e0d0c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1032   => awaddr <= x"0C"; awprot <= "000"; awvalid <= '0'; wdata <= x"0f0e0d0c"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1040   => awaddr <= x"10"; awprot <= "000"; awvalid <= '1'; wdata <= x"13121110"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1041   => awaddr <= x"10"; awprot <= "000"; awvalid <= '1'; wdata <= x"13121110"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1042   => awaddr <= x"10"; awprot <= "000"; awvalid <= '0'; wdata <= x"13121110"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1050   => awaddr <= x"14"; awprot <= "000"; awvalid <= '1'; wdata <= x"17161514"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1051   => awaddr <= x"14"; awprot <= "000"; awvalid <= '1'; wdata <= x"17161514"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1052   => awaddr <= x"14"; awprot <= "000"; awvalid <= '0'; wdata <= x"17161514"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1060   => awaddr <= x"18"; awprot <= "000"; awvalid <= '1'; wdata <= x"1b1a1918"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1061   => awaddr <= x"18"; awprot <= "000"; awvalid <= '1'; wdata <= x"1b1a1918"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1062   => awaddr <= x"18"; awprot <= "000"; awvalid <= '0'; wdata <= x"1b1a1918"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1070   => awaddr <= x"1C"; awprot <= "000"; awvalid <= '1'; wdata <= x"1f1e1d1c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1071   => awaddr <= x"1C"; awprot <= "000"; awvalid <= '1'; wdata <= x"1f1e1d1c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1072   => awaddr <= x"1C"; awprot <= "000"; awvalid <= '0'; wdata <= x"1f1e1d1c"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1080   => awaddr <= x"20"; awprot <= "000"; awvalid <= '1'; wdata <= x"23222120"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1081   => awaddr <= x"20"; awprot <= "000"; awvalid <= '1'; wdata <= x"23222120"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1082   => awaddr <= x"20"; awprot <= "000"; awvalid <= '0'; wdata <= x"23222120"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1090   => awaddr <= x"24"; awprot <= "000"; awvalid <= '1'; wdata <= x"27262524"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1091   => awaddr <= x"24"; awprot <= "000"; awvalid <= '1'; wdata <= x"27262524"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1092   => awaddr <= x"24"; awprot <= "000"; awvalid <= '0'; wdata <= x"27262524"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1100   => awaddr <= x"28"; awprot <= "000"; awvalid <= '1'; wdata <= x"2b2a2928"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1101   => awaddr <= x"28"; awprot <= "000"; awvalid <= '1'; wdata <= x"2b2a2928"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1102   => awaddr <= x"28"; awprot <= "000"; awvalid <= '0'; wdata <= x"2b2a2928"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                when 1110   => awaddr <= x"2C"; awprot <= "000"; awvalid <= '1'; wdata <= x"2f2e2d2c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1111   => awaddr <= x"2C"; awprot <= "000"; awvalid <= '1'; wdata <= x"2f2e2d2c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1112   => awaddr <= x"2C"; awprot <= "000"; awvalid <= '0'; wdata <= x"2f2e2d2c"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+                
+                when 1120   => awaddr <= x"30"; awprot <= "000"; awvalid <= '1'; wdata <= x"33323130"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1121   => awaddr <= x"30"; awprot <= "000"; awvalid <= '1'; wdata <= x"33323130"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1122   => awaddr <= x"30"; awprot <= "000"; awvalid <= '0'; wdata <= x"33323130"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+                
+                when 1130   => awaddr <= x"34"; awprot <= "000"; awvalid <= '1'; wdata <= x"37363534"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1131   => awaddr <= x"34"; awprot <= "000"; awvalid <= '1'; wdata <= x"37363534"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1132   => awaddr <= x"34"; awprot <= "000"; awvalid <= '0'; wdata <= x"37363534"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+                
+                when 1140   => awaddr <= x"38"; awprot <= "000"; awvalid <= '1'; wdata <= x"3b3a3938"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1141   => awaddr <= x"38"; awprot <= "000"; awvalid <= '1'; wdata <= x"3b3a3938"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1142   => awaddr <= x"38"; awprot <= "000"; awvalid <= '0'; wdata <= x"3b3a3938"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+                
+                when 1150   => awaddr <= x"3C"; awprot <= "000"; awvalid <= '1'; wdata <= x"3f3e3d3c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1151   => awaddr <= x"3C"; awprot <= "000"; awvalid <= '1'; wdata <= x"3f3e3d3c"; wstrb <= x"F"; wvalid <= '1'; bready <= '1';
+                when 1152   => awaddr <= x"3C"; awprot <= "000"; awvalid <= '0'; wdata <= x"3f3e3d3c"; wstrb <= x"F"; wvalid <= '0'; bready <= '1';
+
+                --when 1003   => awaddr <= "001000"; awprot <= "000"; awvalid <= '1'; wdata <= x"83828180"; wstrb <= x"8"; wvalid <= '1'; bready <= '1';
+                --when 1004   => awaddr <= "001000"; awprot <= "000"; awvalid <= '1'; wdata <= x"83828180"; wstrb <= x"8"; wvalid <= '1'; bready <= '1';
+                --when 1005   => awaddr <= "001000"; awprot <= "000"; awvalid <= '0'; wdata <= x"83828180"; wstrb <= x"8"; wvalid <= '0'; bready <= '1';
+
+                when others => awaddr <= awaddr; awprot <= awprot; awvalid <= '0'; wdata <= wdata; wstrb <= wstrb; wvalid <= '0'; bready <= '0';
+            end case;
+        end if;
+    end process;
 
 
     --write_processing : process(CLK)
