@@ -118,6 +118,7 @@ module axi_adxl345 #(
         CHK_UPD_NEEDED_ST    ,
         SEND_WRITE_CMD_ST    ,
         INC_ADDR_ST          ,
+        TX_SEND_ADDR_PTR     ,
         TX_READ_REQUEST_ST   ,
         AWAIT_RECEIVE_DATA_ST 
     } fsm;
@@ -237,7 +238,7 @@ module axi_adxl345 #(
 
             always @(posedge S_AXI_LITE_ACLK) begin : need_update_reg_proc 
                 if (~S_AXI_LITE_ARESETN)
-                    register[reg_index] <= 0;
+                    need_update_reg[reg_index] <= 0;
                 else
                     if (slv_reg_wren)
                         if (axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == reg_index)
@@ -357,6 +358,10 @@ module axi_adxl345 #(
                     if (~out_awfull)
                         write_cmd_word_cnt <= write_cmd_word_cnt + 1;
 
+                TX_SEND_ADDR_PTR : 
+                    if (~out_awfull)
+                        write_cmd_word_cnt <= write_cmd_word_cnt + 1;
+                    
                 default : 
                     write_cmd_word_cnt <= 1'b0;
 
@@ -373,7 +378,7 @@ module axi_adxl345 #(
                     if (update_request)
                         current_state <= CHK_UPD_NEEDED_ST;
                     else if (request_timer == REQUEST_INTERVAL-1)
-                        current_state <= TX_READ_REQUEST_ST;
+                        current_state <= TX_SEND_ADDR_PTR;
 
 
                 CHK_UPD_NEEDED_ST : 
@@ -393,6 +398,11 @@ module axi_adxl345 #(
                         current_state <= IDLE_ST;
                     else 
                         current_state <= CHK_UPD_NEEDED_ST;
+
+                TX_SEND_ADDR_PTR: 
+                    if (~out_awfull)
+                        if (write_cmd_word_cnt == 2'b01)
+                            current_state <= TX_READ_REQUEST_ST;
 
                 TX_READ_REQUEST_ST : 
                     if (~out_awfull) 
@@ -433,36 +443,36 @@ module axi_adxl345 #(
             endcase // current_state
     end 
 
-    generate 
+    // generate 
 
-        for (genvar reg_index = 0; reg_index < 15; reg_index++) begin 
+        // for (genvar reg_index = 0; reg_index < 15; reg_index++) begin 
     
-            always @(posedge S_AXI_LITE_ACLK) begin : update_request_proc
-                if (~S_AXI_LITE_ARESETN)
-                    update_request <= 1'b0;
-                else
-                    if (slv_reg_wren) begin 
-                        if (axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == reg_index) begin 
-                            for ( byte_index = 0; byte_index <= (C_S_AXI_LITE_DATA_WIDTH/8)-1; byte_index = byte_index + 1 ) begin 
-                                if ( S_AXI_LITE_WSTRB[byte_index] == 1 & write_mask_register[reg_index][byte_index]) begin 
-                                    update_request <= 1'b1;
-                                end 
-                            end 
-                        end
-                    end else begin 
-                        case (current_state)
-                            INC_ADDR_ST : 
-                                if (address == ADDRESS_LIMIT)
-                                    update_request <= 1'b0;
-                            
-                            default : 
-                                update_request <= update_request;
-                        endcase // current_state
+    always @(posedge S_AXI_LITE_ACLK) begin : update_request_proc
+        if (~S_AXI_LITE_ARESETN)
+            update_request <= 1'b0;
+        else
+            if (slv_reg_wren) begin 
+                // if (axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == reg_index) begin 
+                    for ( byte_index = 0; byte_index <= (C_S_AXI_LITE_DATA_WIDTH/8)-1; byte_index = byte_index + 1 ) begin 
+                        if (write_mask_register[axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]][byte_index]) begin 
+                            update_request <= 1'b1;
+                        end 
                     end 
-            end    
-        end 
+                // end
+            end else begin 
+                case (current_state)
+                    INC_ADDR_ST : 
+                        if (address == ADDRESS_LIMIT)
+                            update_request <= 1'b0;
+                    
+                    default : 
+                        update_request <= update_request;
+                endcase // current_state
+            end 
+    end    
+// end 
 
-    endgenerate
+    // endgenerate
 
 
 
@@ -511,6 +521,13 @@ module axi_adxl345 #(
 
                 endcase // write_cmd_word_cnt
 
+            TX_SEND_ADDR_PTR : 
+                case (write_cmd_word_cnt)
+                    2'b00   : out_din_data <= 8'h01;
+                    2'b01   : out_din_data <= 8'h00;
+                    default : out_din_data <= out_din_data;
+                endcase // write_cmd_word_cnt
+
             TX_READ_REQUEST_ST : 
                 out_din_data <= ADDRESS_LIMIT;
 
@@ -534,6 +551,12 @@ module axi_adxl345 #(
                 else 
                     out_wren <= 1'b0;
 
+            TX_SEND_ADDR_PTR : 
+                if (~out_awfull)
+                    out_wren <= 1'b1;
+                else 
+                    out_wren <= 1'b0;
+
             default : 
                 out_wren <= 1'b0;
 
@@ -547,6 +570,9 @@ module axi_adxl345 #(
 
             TX_READ_REQUEST_ST : 
                 out_din_user <= {DEVICE_ADDRESS, 1'b1};
+
+            TX_SEND_ADDR_PTR : 
+                out_din_user <= {DEVICE_ADDRESS, 1'b0};
 
             default : 
                 out_din_user <= '{default:0};
@@ -567,6 +593,14 @@ module axi_adxl345 #(
 
             TX_READ_REQUEST_ST : 
                 out_din_last <= 1'b1;
+
+            TX_SEND_ADDR_PTR : 
+                case (write_cmd_word_cnt)
+                    2'b01 : 
+                        out_din_last <= 1'b1;
+                    default : 
+                        out_din_last <= 1'b0;
+                endcase // write_cmd_word_cnt
 
             default : 
                 out_din_last <= 1'b0;
